@@ -84,7 +84,7 @@
 
     <label>🎯 AQL за типом дефекту <span style="font-weight:400;color:#64748b;">(план враховує всі рівні)</span></label>
     <div class="aql-group">
-      <div><label style="margin:4px 0 2px;">Critical</label><select id="aqlCritical"><option value="0">0%</option><option value="0.65" selected>0.65%</option></select></div>
+      <div><label style="margin:4px 0 2px;">Critical</label><select id="aqlCritical"><option value="0.065" selected>0.065%</option><option value="0.65">0.65%</option></select></div>
       <div><label style="margin:4px 0 2px;">Major</label><select id="aqlMajor"><option value="0.65">0.65%</option><option value="1.0" selected>1.0%</option><option value="1.5">1.5%</option><option value="2.5">2.5%</option></select></div>
       <div><label style="margin:4px 0 2px;">Minor</label><select id="aqlMinor"><option value="1.5">1.5%</option><option value="2.5" selected>2.5%</option><option value="4.0">4.0%</option></select></div>
     </div>
@@ -174,32 +174,33 @@
       strataSummaryBlock: $('strataSummaryBlock'), strataSummaryContent: $('strataSummaryContent')
     };
 
+    // Виправлені таблиці планів ISO 2859-1 (рівень II, одноступінчастий)
     const SINGLE_NORMAL = {
-      "0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,0,1],K:[125,0,1],L:[200,0,1],M:[315,0,1],N:[500,0,1],P:[800,0,1],Q:[1250,0,1]},
-      "0.65": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
-      "1.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
-      "1.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "2.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "4.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "6.5": {A:[2,0,1],B:[3,1,2],C:[5,1,2],D:[8,2,3],E:[13,3,4],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
+      "0.065": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
+      "0.65": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,14,15]},
+      "1.0":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,2,3],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
+      "1.5":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "2.5":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "4.0":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "6.5":  {A:[2,0,1],B:[3,1,2],C:[5,1,2],D:[8,2,3],E:[13,3,4],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
     };
     const SINGLE_TIGHTENED = {
-      "0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,0,1],K:[125,0,1],L:[200,0,1],M:[315,0,1],N:[500,0,1],P:[800,0,1],Q:[1250,0,1]},
+      "0.065": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,1,2],K:[125,2,3],L:[200,3,4],M:[315,5,6],N:[500,7,8],P:[800,10,11],Q:[1250,10,11]},
       "0.65": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
-      "1.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
-      "1.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,1,2],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
-      "2.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "4.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "6.5": {A:[2,0,1],B:[3,0,1],C:[5,1,2],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
+      "1.0":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,21,22]},
+      "1.5":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,1,2],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
+      "2.5":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "4.0":  {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "6.5":  {A:[2,0,1],B:[3,0,1],C:[5,1,2],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
     };
     const SINGLE_REDUCED = {
-      "0": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,0,1],L:[80,0,1],M:[125,0,1],N:[200,0,1],P:[315,0,1],Q:[500,0,1]},
+      "0.065": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,0,1],L:[80,1,2],M:[125,2,3],N:[200,3,4],P:[315,5,6],Q:[500,7,8]},
       "0.65": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,1,2],L:[80,2,3],M:[125,3,4],N:[200,5,6],P:[315,7,8],Q:[500,10,11]},
-      "1.0": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,1,2],J:[32,1,2],K:[50,2,3],L:[80,3,4],M:[125,5,6],N:[200,7,8],P:[315,10,11],Q:[500,14,15]},
-      "1.5": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,1,2],H:[20,1,2],J:[32,2,3],K:[50,3,4],L:[80,5,6],M:[125,7,8],N:[200,10,11],P:[315,14,15],Q:[500,21,22]},
-      "2.5": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,1,2],G:[13,1,2],H:[20,2,3],J:[32,3,4],K:[50,5,6],L:[80,7,8],M:[125,10,11],N:[200,14,15],P:[315,21,22],Q:[500,21,22]},
-      "4.0": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,1,2],F:[8,1,2],G:[13,2,3],H:[20,3,4],J:[32,5,6],K:[50,7,8],L:[80,10,11],M:[125,14,15],N:[200,21,22],P:[315,21,22],Q:[500,21,22]},
-      "6.5": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,1,2],E:[8,1,2],F:[8,2,3],G:[13,3,4],H:[20,5,6],J:[32,7,8],K:[50,10,11],L:[80,14,15],M:[125,21,22],N:[200,21,22],P:[315,21,22],Q:[500,21,22]}
+      "1.0":  {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,1,2],J:[32,1,2],K:[50,2,3],L:[80,3,4],M:[125,5,6],N:[200,7,8],P:[315,10,11],Q:[500,14,15]},
+      "1.5":  {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,1,2],H:[20,1,2],J:[32,2,3],K:[50,3,4],L:[80,5,6],M:[125,7,8],N:[200,10,11],P:[315,14,15],Q:[500,21,22]},
+      "2.5":  {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,1,2],G:[13,1,2],H:[20,2,3],J:[32,3,4],K:[50,5,6],L:[80,7,8],M:[125,10,11],N:[200,14,15],P:[315,21,22],Q:[500,21,22]},
+      "4.0":  {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,1,2],F:[8,1,2],G:[13,2,3],H:[20,3,4],J:[32,5,6],K:[50,7,8],L:[80,10,11],M:[125,14,15],N:[200,21,22],P:[315,21,22],Q:[500,21,22]},
+      "6.5":  {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,1,2],E:[8,1,2],F:[8,2,3],G:[13,3,4],H:[20,5,6],J:[32,7,8],K:[50,10,11],L:[80,14,15],M:[125,21,22],N:[200,21,22],P:[315,21,22],Q:[500,21,22]}
     };
 
     const CODE_TABLE = [[2,8,'A'],[9,15,'B'],[16,25,'C'],[26,50,'D'],[51,90,'E'],[91,150,'F'],[151,280,'G'],[281,500,'H'],[501,1200,'J'],[1201,3200,'K'],[3201,10000,'L'],[10001,35000,'M'],[35001,150000,'N'],[150001,500000,'P'],[500001,Infinity,'Q']];
@@ -213,20 +214,12 @@
     let strataColumnIndex = -1;
 
     function getCodeLetter(N) { for (const [l,h,c] of CODE_TABLE) if (N>=l && N<=h) return c; return 'Q'; }
-    function findPlan(table, aql, code) {
-      const t = table[aql]; if (!t) return null;
-      let idx = CODE_ORDER.indexOf(code);
-      for (let i=idx; i<CODE_ORDER.length; i++) { const c = CODE_ORDER[i]; if (t[c]) return {code:c, plan:t[c]}; }
-      for (let i=idx-1; i>=0; i--) { const c = CODE_ORDER[i]; if (t[c]) return {code:c, plan:t[c]}; }
-      return null;
-    }
-    function getSamplingPlan(N, AQL, mode) {
-      const code = getCodeLetter(N);
-      let table = mode==='tightened' ? SINGLE_TIGHTENED : (mode==='reduced' ? SINGLE_REDUCED : SINGLE_NORMAL);
-      const found = findPlan(table, AQL, code);
-      if (!found) return null;
-      const [n,ac,re] = found.plan;
-      return {code: found.code, n, ac, re, aql: AQL};
+
+    function getPlanForCode(code, aql, mode) {
+      const table = mode === 'tightened' ? SINGLE_TIGHTENED : (mode === 'reduced' ? SINGLE_REDUCED : SINGLE_NORMAL);
+      const row = table[aql];
+      if (!row) return null;
+      return row[code] ? { code, n: row[code][0], ac: row[code][1], re: row[code][2] } : null;
     }
 
     function showToast(msg) { const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2800); }
@@ -247,49 +240,82 @@
       DOM.sampleBody.appendChild(table);
     }
 
-    function seededRandom(seed) { let s=seed%2147483647; if(s<=0) s+=2147483646; return ()=>{ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
+    function seededRandom(seed) {
+      let s = seed % 2147483647;
+      if (s <= 0) s = 1;
+      return ()=>{
+        s = (s * 16807) % 2147483647;
+        return (s - 1) / 2147483646;
+      };
+    }
     function fisherYates(arr, seed) { const rng=seededRandom(seed); const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
     function getSampleIndices(total, sampleSize, seed) { const indices=Array.from({length:total},(_,i)=>i); return fisherYates(indices,seed).slice(0,sampleSize); }
 
+    // Виправлена функція стратифікованої вибірки з коректним розподілом без перевищення розміру груп
     function stratifiedSampleIndices(dataRows, strataColIndex, totalSampleSize, method, seed) {
       const groups = new Map();
       dataRows.forEach((row,idx)=>{ const key=row[strataColIndex]??''; if(!groups.has(key)) groups.set(key,[]); groups.get(key).push(idx); });
       const strataNames = Array.from(groups.keys());
       const strataSizes = strataNames.map(n=>groups.get(n).length);
       const totalSize = dataRows.length;
-      let sampleSizes = [];
+      if (totalSize === 0) return [];
+      let sampleSizes = new Array(strataNames.length).fill(0);
+
       if (method === 'equal') {
         const base = Math.floor(totalSampleSize / strataNames.length);
-        const rem = totalSampleSize - base * strataNames.length;
-        sampleSizes = strataNames.map((_,i)=> i<rem ? base+1 : base);
-      } else {
-        let allocated = 0;
-        sampleSizes = strataNames.map((_,i)=>{
-          const prop = strataSizes[i]/totalSize;
-          let size = Math.round(prop*totalSampleSize);
-          if (size > strataSizes[i]) size = strataSizes[i];
-          if (size < 1 && strataSizes[i] > 0) size = 1;
-          allocated += size;
-          return size;
-        });
+        sampleSizes = strataNames.map(() => base);
+        let remainder = totalSampleSize - base * strataNames.length;
+        const indices = strataNames.map((_,i)=>i).sort((a,b)=>strataSizes[b]-strataSizes[a]);
+        for (let i=0; remainder>0 && i<indices.length; i++) {
+          const idx = indices[i];
+          if (sampleSizes[idx] < strataSizes[idx]) { sampleSizes[idx]++; remainder--; }
+        }
+      } else { // proportional
+        const fractions = strataSizes.map(s => (s / totalSize) * totalSampleSize);
+        const floors = fractions.map(f => Math.floor(f));
+        sampleSizes = floors.slice();
+        let allocated = floors.reduce((a,b)=>a+b,0);
         let diff = totalSampleSize - allocated;
-        if (diff !== 0) {
-          const sorted = strataNames.map((_,i)=>i).sort((a,b)=> strataSizes[b]-strataSizes[a]);
-          for (let i=0; i<Math.abs(diff); i++) {
-            const idx = sorted[i % sorted.length];
-            if (diff>0 && sampleSizes[idx] < strataSizes[idx]) sampleSizes[idx]++;
-            else if (diff<0 && sampleSizes[idx] > 1) sampleSizes[idx]--;
+        // Пріоритет: групи з найбільшим дробовим залишком, але не перевищуючи розмір групи
+        const priority = strataNames.map((_,i)=>i).sort((a,b)=> (fractions[b]-floors[b]) - (fractions[a]-floors[a]) );
+        for (let i=0; diff>0 && i<priority.length; i++) {
+          const idx = priority[i];
+          if (sampleSizes[idx] < strataSizes[idx]) { sampleSizes[idx]++; diff--; }
+        }
+      }
+
+      // Корегування, якщо якісь групи отримали більше за свій розмір (не повинно траплятись, але перестраховка)
+      for (let i=0; i<sampleSizes.length; i++) {
+        if (sampleSizes[i] > strataSizes[i]) sampleSizes[i] = strataSizes[i];
+      }
+
+      // Якщо загальна сума менша за totalSampleSize, добираємо з інших груп
+      let currentSum = sampleSizes.reduce((a,b)=>a+b,0);
+      if (currentSum < totalSampleSize) {
+        const sortedByFree = strataNames.map((_,i)=>i).sort((a,b)=>(strataSizes[b]-sampleSizes[b])-(strataSizes[a]-sampleSizes[a]));
+        for (let i=0; i<sortedByFree.length && currentSum<totalSampleSize; i++) {
+          const idx = sortedByFree[i];
+          const free = strataSizes[idx] - sampleSizes[idx];
+          if (free > 0) {
+            const add = Math.min(free, totalSampleSize - currentSum);
+            sampleSizes[idx] += add;
+            currentSum += add;
           }
         }
       }
+
+      // Вибірка індексів із кожної групи
       const selected = [];
       const rng = seededRandom(seed);
       strataNames.forEach((name,i)=>{
         const indices = groups.get(name);
         const size = Math.min(sampleSizes[i], indices.length);
+        if (size <= 0) return;
         const shuffled = fisherYates(indices, Math.floor(rng()*1000000));
         selected.push(...shuffled.slice(0,size));
       });
+
+      // Якщо все ще менше (зовсім крайній випадок), додаємо випадкові з усієї партії
       if (selected.length < totalSampleSize) {
         const remaining = totalSampleSize - selected.length;
         const usedSet = new Set(selected);
@@ -300,7 +326,6 @@
       return selected.slice(0, totalSampleSize);
     }
 
-    // Обчислення статистики розподілу для зведеної таблиці
     function getStrataSummary(dataRows, sampleIndices, strataColIndex) {
       const groups = new Map();
       dataRows.forEach((row, idx) => {
@@ -354,8 +379,14 @@
     }
 
     function findStrataColumn(headers) {
-      const lower = headers.map(h => h.toLowerCase().trim());
-      return lower.indexOf('modification or execution');
+      const normalized = headers.map(h => h.trim().toLowerCase().replace(/\s+/g, ' '));
+      const exactIndex = normalized.indexOf('modification or execution');
+      if (exactIndex !== -1) return exactIndex;
+      for (let i = 0; i < headers.length; i++) {
+        const lower = headers[i].toLowerCase();
+        if (lower.includes('modification') && lower.includes('execution')) return i;
+      }
+      return -1;
     }
 
     function updateStrataBlock() {
@@ -379,7 +410,6 @@
       }
     }
 
-    // Рендерить зведену таблицю розподілу
     function renderStrataSummary(dataRows, sampleIndices, strataColIdx) {
       const summary = getStrataSummary(dataRows, sampleIndices, strataColIdx);
       if (!summary.length) {
@@ -396,67 +426,92 @@
     }
 
     function generateSample() {
-      const N = parseInt(DOM.lotSize.value,10);
-      if (isNaN(N)||N<2) { alert('Обсяг партії має бути цілим числом ≥ 2'); DOM.lotSize.value=lastValidLotSize; return; }
-      lastValidLotSize = N;
-      const mode = DOM.inspectionMode.value;
-      const plans = {
-        critical: getSamplingPlan(N, DOM.aqlCritical.value, mode),
-        major: getSamplingPlan(N, DOM.aqlMajor.value, mode),
-        minor: getSamplingPlan(N, DOM.aqlMinor.value, mode)
-      };
-      for (const [type, plan] of Object.entries(plans)) { if (!plan) { alert(`Не вдалося визначити план для рівня ${type} з AQL у режимі ${mode}.`); return; } }
-      const n = plans.major.n;
-      let seedInput = DOM.seed.value.trim();
-      if (seedInput!=='') { if(!/^\d+$/.test(seedInput)) { alert('Seed має бути цілим додатним числом або порожнім.'); return; } currentSeed=parseInt(seedInput,10); }
-      else { currentSeed = Math.floor(Math.random()*1000000000); }
-      DOM.seed.value = currentSeed;
+      DOM.generateBtn.disabled = true;
+      DOM.generateBtn.textContent = '⏳ Генерація...';
+      DOM.autoNote.innerHTML = '⏳ Обробка...';
 
-      let dataRows = [], headers = [];
-      if (allDataRows.length && currentHeaders.length) {
-        dataRows = allDataRows; headers = currentHeaders;
-      } else {
-        headers = ['ID', 'Serial', 'Modification or Execution'];
-        for (let i=1; i<=N; i++) dataRows.push([String(i), `SN${String(i).padStart(6,'0')}`, `Версія ${(i%3)+1}`]);
-      }
-      currentHeaders = headers;
-      updateStrataBlock();
+      setTimeout(() => {
+        try {
+          const N = parseInt(DOM.lotSize.value,10);
+          if (isNaN(N)||N<2) { alert('Обсяг партії має бути цілим числом ≥ 2'); DOM.lotSize.value=lastValidLotSize; return; }
+          if (N > 50000) { alert('Обсяг партії не може перевищувати 50 000 для цього інструменту.'); return; }
+          lastValidLotSize = N;
+          const mode = DOM.inspectionMode.value;
 
-      if (dataRows.length < n) { alert(`Недостатньо даних. Потрібно мінімум ${n}, є ${dataRows.length}`); return; }
+          const planCritical = getPlanForCode(getCodeLetter(N), DOM.aqlCritical.value, mode);
+          const planMajor = getPlanForCode(getCodeLetter(N), DOM.aqlMajor.value, mode);
+          const planMinor = getPlanForCode(getCodeLetter(N), DOM.aqlMinor.value, mode);
 
-      let indices;
-      const useStrata = DOM.useStratification.checked && strataColumnIndex >= 0;
-      if (useStrata) {
-        indices = stratifiedSampleIndices(dataRows, strataColumnIndex, n, DOM.strataMethod.value, currentSeed);
-        // Показати зведену таблицю
-        renderStrataSummary(dataRows, indices, strataColumnIndex);
-      } else {
-        DOM.strataSummaryBlock.classList.add('hidden');
-        indices = getSampleIndices(dataRows.length, n, currentSeed);
-      }
+          if (!planCritical || !planMajor || !planMinor) {
+            alert(`Не вдалося знайти плани для всіх AQL для обсягу ${N} у режимі ${mode}. Спробуйте інші параметри.`);
+            return;
+          }
 
-      currentSampleRows = indices.map(i => ({ row: dataRows[i], origIndex: i }));
+          // Обсяг вибірки — максимум із трьох планів
+          const n = Math.max(planCritical.n, planMajor.n, planMinor.n);
 
-      const modeNames = { normal: 'Нормальний', tightened: 'Посилений', reduced: 'Послаблений' };
-      DOM.planDetails.innerHTML = `
-        <div class="plan-detail-grid">
-          <div class="item"><span class="label">Код літери</span><span class="value">${plans.critical.code}</span></div>
-          <div class="item"><span class="label">Обсяг вибірки (n)</span><span class="value">${n}</span></div>
-          <div class="item"><span class="label">Режим</span><span class="value">${modeNames[mode]}</span></div>
-          <div class="item"><span class="label">Seed</span><span class="value">${currentSeed}</span></div>
-          <div class="item"><span class="label">Critical AQL</span><span class="value">${plans.critical.aql}%</span></div>
-          <div class="item"><span class="label">Ac / Re Critical</span><span class="value">${plans.critical.ac} / ${plans.critical.re}</span></div>
-          <div class="item"><span class="label">Major AQL</span><span class="value">${plans.major.aql}%</span></div>
-          <div class="item"><span class="label">Ac / Re Major</span><span class="value">${plans.major.ac} / ${plans.major.re}</span></div>
-          <div class="item"><span class="label">Minor AQL</span><span class="value">${plans.minor.aql}%</span></div>
-          <div class="item"><span class="label">Ac / Re Minor</span><span class="value">${plans.minor.ac} / ${plans.minor.re}</span></div>
-        </div>
-      `;
-      renderSampleTable(currentSampleRows.map(i=>i.row), currentHeaders);
-      DOM.sampleSizeBadge.textContent = `n = ${n}`;
-      DOM.sampleTitle.textContent = `Вибірка (n = ${n})  ${allDataRows.length ? '● файл' : '● синтет.'}`;
-      DOM.planCard.classList.remove('hidden');
-      setExportEnabled(true);
+          let seedInput = DOM.seed.value.trim();
+          if (seedInput!=='') { 
+            if(!/^\d+$/.test(seedInput)) { alert('Seed має бути цілим додатним числом або порожнім.'); return; }
+            currentSeed = parseInt(seedInput,10);
+          } else {
+            currentSeed = Math.floor(Math.random()*1000000000);
+          }
+          DOM.seed.value = currentSeed;
+
+          let dataRows = [], headers = [];
+          if (allDataRows.length && currentHeaders.length) {
+            dataRows = allDataRows; headers = currentHeaders;
+          } else {
+            headers = ['ID', 'Serial', 'Modification or Execution'];
+            for (let i=1; i<=N; i++) dataRows.push([String(i), `SN${String(i).padStart(6,'0')}`, `Версія ${(i%3)+1}`]);
+          }
+          currentHeaders = headers;
+          updateStrataBlock();
+
+          if (dataRows.length < n) { alert(`Недостатньо даних. Потрібно мінімум ${n}, є ${dataRows.length}`); return; }
+
+          let indices;
+          const useStrata = DOM.useStratification.checked && strataColumnIndex >= 0;
+          if (useStrata) {
+            indices = stratifiedSampleIndices(dataRows, strataColumnIndex, n, DOM.strataMethod.value, currentSeed);
+            renderStrataSummary(dataRows, indices, strataColumnIndex);
+          } else {
+            DOM.strataSummaryBlock.classList.add('hidden');
+            indices = getSampleIndices(dataRows.length, n, currentSeed);
+          }
+
+          currentSampleRows = indices.map(i => ({ row: dataRows[i], origIndex: i }));
+
+          const modeNames = { normal: 'Нормальний', tightened: 'Посилений', reduced: 'Послаблений' };
+          DOM.planDetails.innerHTML = `
+            <div class="plan-detail-grid">
+              <div class="item"><span class="label">Код літери</span><span class="value">${getCodeLetter(N)}</span></div>
+              <div class="item"><span class="label">Обсяг вибірки (n)</span><span class="value">${n}</span></div>
+              <div class="item"><span class="label">Режим</span><span class="value">${modeNames[mode]}</span></div>
+              <div class="item"><span class="label">Seed</span><span class="value">${currentSeed}</span></div>
+              <div class="item"><span class="label">Critical AQL</span><span class="value">${DOM.aqlCritical.value}%</span></div>
+              <div class="item"><span class="label">Ac / Re Critical</span><span class="value">${planCritical.ac} / ${planCritical.re}</span></div>
+              <div class="item"><span class="label">Major AQL</span><span class="value">${DOM.aqlMajor.value}%</span></div>
+              <div class="item"><span class="label">Ac / Re Major</span><span class="value">${planMajor.ac} / ${planMajor.re}</span></div>
+              <div class="item"><span class="label">Minor AQL</span><span class="value">${DOM.aqlMinor.value}%</span></div>
+              <div class="item"><span class="label">Ac / Re Minor</span><span class="value">${planMinor.ac} / ${planMinor.re}</span></div>
+            </div>
+          `;
+          renderSampleTable(currentSampleRows.map(i=>i.row), currentHeaders);
+          DOM.sampleSizeBadge.textContent = `n = ${n}`;
+          DOM.sampleTitle.textContent = `Вибірка (n = ${n})  ${allDataRows.length ? '● файл' : '● синтет.'}`;
+          DOM.planCard.classList.remove('hidden');
+          setExportEnabled(true);
+          DOM.autoNote.innerHTML = '✅ Готово';
+        } catch (e) {
+          console.error(e);
+          alert('Помилка при генерації вибірки: ' + e.message);
+        } finally {
+          DOM.generateBtn.disabled = false;
+          DOM.generateBtn.textContent = '🎲 Сформувати вибірку';
+        }
+      }, 50);
     }
 
     DOM.fileInput.addEventListener('change', function(e) {
@@ -467,14 +522,23 @@
       reader.onload = function(evt) {
         try {
           const data = new Uint8Array(evt.target.result);
-          const wb = XLSX.read(data,{type:'array'});
+          const wb = XLSX.read(data, { type: 'array', raw: true });
           const sheet = wb.Sheets[wb.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet,{header:1,defval:'',raw:false});
-          if (json.length<2) { alert('Файл порожній або містить замало даних'); return; }
-          currentHeaders = json[0].map(h=>String(h).trim());
+          const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: true });
+          if (json.length < 2) { alert('Файл порожній або містить замало даних'); return; }
+          currentHeaders = json[0].map(h => String(h).trim());
           const rawRows = json.slice(1);
-          allDataRows = rawRows.filter(row=>row.some(cell=>cell!==''));
+          const filtered = rawRows.filter(row => row.some(cell => cell !== '' && cell !== null && cell !== undefined));
+          if (filtered.length === 0) {
+            alert('Файл не містить жодного рядка з даними. Перевірте вміст.');
+            DOM.fileNameDisplay.textContent = 'Файл не вибрано';
+            DOM.autoNote.innerHTML = 'Після вибору файлу обсяг партії визначиться автоматично';
+            this.value = '';
+            return;
+          }
+          allDataRows = filtered.map(row => row.map(cell => String(cell)));
           const validRows = allDataRows.length;
+          if (validRows > 50000) { alert('Завеликий файл. Максимальна кількість рядків — 50 000.'); allDataRows = []; return; }
           DOM.lotSize.value = validRows;
           lastValidLotSize = validRows;
           let note = `✅ Автоматично визначено: <strong>${validRows}</strong> одиниць.`;
@@ -496,6 +560,7 @@
       if(isNaN(v)||v<2) { this.value=lastValidLotSize; }
       else {
         lastValidLotSize=v;
+        if (v > 50000) { alert('Обсяг партії не може перевищувати 50 000.'); this.value=lastValidLotSize; return; }
         if(allDataRows.length>0 && v!==allDataRows.length) {
           if(confirm(`Ви змінили обсяг партії на ${v}. Це очистить завантажені дані. Продовжити?`)) {
             allDataRows=[]; currentHeaders=[]; currentSampleRows=null; DOM.sampleBody.innerHTML='';
@@ -509,7 +574,22 @@
 
     DOM.useStratification.addEventListener('change', function() { DOM.strataMethod.disabled = !this.checked; });
     DOM.generateBtn.addEventListener('click', generateSample);
-    DOM.copySeedBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(DOM.seed.value); showToast('📋 Seed скопійовано'); } catch(e){ showToast('❌ Не вдалося скопіювати seed.'); } });
+    DOM.copySeedBtn.addEventListener('click', async ()=>{
+      const seedVal = DOM.seed.value;
+      try {
+        await navigator.clipboard.writeText(seedVal);
+        showToast('📋 Seed скопійовано');
+      } catch (e) {
+        // Резервний метод для HTTP/небезпечного контексту
+        const tmp = document.createElement('textarea');
+        tmp.value = seedVal;
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand('copy');
+        document.body.removeChild(tmp);
+        showToast('📋 Seed скопійовано (через резервний метод)');
+      }
+    });
     DOM.downloadCsvRandom.addEventListener('click', function(){ exportToCSV(false,this); });
     DOM.downloadCsvSorted.addEventListener('click', function(){ exportToCSV(true,this); });
     DOM.downloadExcelRandom.addEventListener('click', function(){ exportToExcel(false,this); });
@@ -517,7 +597,7 @@
 
     DOM.clearBtn.addEventListener('click', ()=>{
       DOM.lotIdentifier.value='25/3/F/41/'; DOM.lotSize.value='1000'; lastValidLotSize=1000;
-      DOM.aqlCritical.value='0.65'; DOM.aqlMajor.value='1.0'; DOM.aqlMinor.value='2.5';
+      DOM.aqlCritical.value='0.065'; DOM.aqlMajor.value='1.0'; DOM.aqlMinor.value='2.5';
       DOM.inspectionMode.value='normal';
       const now=new Date();
       DOM.seed.value=`${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
