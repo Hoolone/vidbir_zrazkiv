@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <title>Формування вибірки (ISO 2859-1)</title>
+    <!-- SheetJS library -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 16px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09);
+        }
+        h1 {
+            font-size: 2rem;
+            margin: 0 0 4px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .sub {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 22px;
+            border-left: 4px solid #3b82f6;
+            padding-left: 14px;
+            line-height: 1.5;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin: 20px 0 8px;
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+        }
+        input,
+        select,
+        button,
+        .fake-file {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1.02rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.13);
+        }
+        button {
+            background: #3b82f6;
+            color: #ffffff;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 16px;
+            font-size: 1.02rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:active {
+            transform: scale(0.97);
+        }
+        button:hover:not(:disabled) {
+            background: #2563eb;
+        }
+        button.secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+        button.secondary:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+        button:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .sample-window {
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 16px;
+            background: #fafcff;
+        }
+        .sample-header {
+            background: #f1f5f9;
+            padding: 12px 18px;
+            font-weight: 600;
+            color: #334155;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .sample-header .badge {
+            background: #3b82f6;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+        .sample-body {
+            max-height: 440px;
+            overflow-y: auto;
+            padding: 8px 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th,
+        td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        tr:hover td {
+            background: #f1f5f9;
+        }
+        .aql-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+        .aql-group label {
+            margin: 4px 0 4px;
+            font-size: 0.85rem;
+        }
+        .flex-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .flex-row button {
+            flex: 1;
+            min-width: 140px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .note {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+        .seed-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .seed-wrapper input {
+            flex: 1;
+        }
+        .seed-wrapper button {
+            flex: 0 0 auto;
+            margin-top: 0;
+            width: auto;
+            padding: 14px 22px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            z-index: 999;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            animation: fadeInOut 2.8s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(24px);
+            }
+            14% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            72% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-12px);
+            }
+        }
+        .saving {
+            background: #10b981 !important;
+        }
+        .file-zone {
+            position: relative;
+            border-radius: 16px;
+            border: 2px dashed #d1d5db;
+            padding: 4px;
+            transition: border-color 0.2s, background 0.2s;
+            background: #fafcff;
+        }
+        .file-zone:hover {
+            border-color: #3b82f6;
+            background: #f8faff;
+        }
+        .file-zone .fake-file {
+            border: none;
+            background: transparent;
+            padding: 16px 18px;
+            color: #64748b;
+            cursor: pointer;
+        }
+        .file-zone input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .plan-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+        }
+        .plan-detail-grid .item {
+            display: flex;
+            flex-direction: column;
+        }
+        .plan-detail-grid .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #64748b;
+        }
+        .plan-detail-grid .value {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #0f172a;
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 4px;
+            }
+            .card {
+                padding: 16px 18px;
+                border-radius: 20px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .aql-group {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
+            }
+            .flex-row {
+                flex-direction: column;
+            }
+            .flex-row button {
+                min-width: unset;
+            }
+            .seed-wrapper {
+                flex-wrap: wrap;
+            }
+            .seed-wrapper button {
+                width: 100%;
+                justify-content: center;
+            }
+            .plan-detail-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                padding: 14px 16px;
+            }
+            th,
+            td {
+                padding: 8px 10px;
+                font-size: 0.82rem;
+            }
+        }
+        @media (max-width: 420px) {
+            .aql-group {
+                grid-template-columns: 1fr;
+            }
+            .plan-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== MAIN CARD ===== -->
+        <div class="card">
+            <h1>📊 Формування вибірки</h1>
+            <div class="sub">ISO 2859-1 · Одноступінчатий · Нормальний · Рівень II</div>
+
+            <label>🆔 Ідентифікатор партії</label>
+            <input type="text" id="lotIdentifier" value="25/3/F/41/" />
+
+            <label>📦 Обсяг партії <span style="font-weight:400;color:#64748b;">(N)</span></label>
+            <input type="number" id="lotSize" value="1000" min="2" />
+
+            <label>🎯 AQL за типом дефекту <span style="font-weight:400;color:#64748b;">(план за Major)</span></label>
+            <div class="aql-group">
+                <div>
+                    <label style="margin:4px 0 2px;">Critical</label>
+                    <select id="aqlCritical">
+                        <option value="0">0%</option>
+                        <option value="0.65" selected>0.65%</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="margin:4px 0 2px;">Major</label>
+                    <select id="aqlMajor">
+                        <option value="0.65">0.65%</option>
+                        <option value="1.0" selected>1.0%</option>
+                        <option value="1.5">1.5%</option>
+                        <option value="2.5">2.5%</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="margin:4px 0 2px;">Minor</label>
+                    <select id="aqlMinor">
+                        <option value="1.5">1.5%</option>
+                        <option value="2.5" selected>2.5%</option>
+                        <option value="4.0">4.0%</option>
+                    </select>
+                </div>
+            </div>
+
+            <label>📂 Файл партії <span style="font-weight:400;color:#64748b;">(CSV, XLSX, XLS)</span></label>
+            <div class="file-zone">
+                <div class="fake-file" id="fileNameDisplay">Файл не вибрано</div>
+                <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" />
+            </div>
+            <div class="note" id="autoNote">Після вибору файлу обсяг партії визначиться автоматично</div>
+
+            <label>🌱 Seed <span style="font-weight:400;color:#64748b;">(для відтворюваності)</span></label>
+            <div class="seed-wrapper">
+                <input type="text" id="seed" placeholder="Введіть seed або залиште порожнім" />
+                <button id="copySeedBtn" class="secondary" style="margin-top:0;">📋 Копіювати</button>
+            </div>
+
+            <div class="flex-row" style="margin-top:22px;">
+                <button id="generateBtn">🎲 Сформувати вибірку</button>
+                <button id="clearFormBtn" class="secondary">🗑 Очистити</button>
+            </div>
+        </div>
+
+        <!-- ===== PLAN CARD ===== -->
+        <div id="planCard" class="card hidden">
+            <h3 style="margin:0 0 8px;">📋 План контролю</h3>
+            <div id="planDetails"></div>
+
+            <h3 style="margin:28px 0 12px;">📋 Вибрана вибірка</h3>
+            <div class="sample-window">
+                <div class="sample-header" id="sampleHeader">
+                    <span id="sampleTitle">Попередній перегляд</span>
+                    <span class="badge" id="sampleSizeBadge">n = 0</span>
+                </div>
+                <div class="sample-body" id="sampleBody"></div>
+            </div>
+
+            <div style="margin-top:22px;">
+                <div class="flex-row" style="margin-bottom:10px;">
+                    <button id="downloadCsvRandomBtn" class="secondary" disabled>⬇ CSV (випадковий)</button>
+                    <button id="downloadCsvSortedBtn" class="secondary" disabled>⬇ CSV (відсорт.)</button>
+                </div>
+                <div class="flex-row">
+                    <button id="downloadExcelRandomBtn" class="secondary" disabled>⬇ Excel (випадковий)</button>
+                    <button id="downloadExcelSortedBtn" class="secondary" disabled>⬇ Excel (відсорт.)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== Перевірка наявності бібліотеки XLSX =====
+            if (typeof XLSX === 'undefined') {
+                document.getElementById('autoNote').innerHTML =
+                    '❌ Помилка: бібліотека для роботи з Excel не завантажилась. Перевірте підключення до інтернету.';
+                document.getElementById('csvFile').disabled = true;
+                console.error('SheetJS library not loaded.');
+            }
+
+            // ===== DOM refs =====
+            const $ = (id) => document.getElementById(id);
+            const DOM = {
+                lotSize: $('lotSize'),
+                lotIdentifier: $('lotIdentifier'),
+                aqlCritical: $('aqlCritical'),
+                aqlMajor: $('aqlMajor'),
+                aqlMinor: $('aqlMinor'),
+                seed: $('seed'),
+                planDetails: $('planDetails'),
+                sampleBody: $('sampleBody'),
+                sampleTitle: $('sampleTitle'),
+                sampleSizeBadge: $('sampleSizeBadge'),
+                fileNameDisplay: $('fileNameDisplay'),
+                autoNote: $('autoNote'),
+                downloadCsvRandom: $('downloadCsvRandomBtn'),
+                downloadCsvSorted: $('downloadCsvSortedBtn'),
+                downloadExcelRandom: $('downloadExcelRandomBtn'),
+                downloadExcelSorted: $('downloadExcelSortedBtn'),
+                planCard: $('planCard'),
+                generateBtn: $('generateBtn'),
+                clearBtn: $('clearFormBtn'),
+                copySeedBtn: $('copySeedBtn'),
+                fileInput: $('csvFile'),
+            };
+
+            // ===== ISO 2859-1 table: Single, Normal, Level II =====
+            const SINGLE_NORMAL = {
+                "0": {
+                    A: [2, 0, 1],
+                    B: [3, 0, 1],
+                    C: [5, 0, 1],
+                    D: [8, 0, 1],
+                    E: [13, 0, 1],
+                    F: [20, 0, 1],
+                    G: [32, 0, 1],
+                    H: [50, 0, 1],
+                    J: [80, 0, 1],
+                    K: [125, 0, 1],
+                    L: [200, 0, 1],
+                    M: [315, 0, 1],
+                    N: [500, 0, 1],
+                    P: [800, 0, 1],
+                    Q: [1250, 0, 1]
+                },
+                "0.65": {
+                    A: [2, 0, 1],
+                    B: [3, 0, 1],
+                    C: [5, 0, 1],
+                    D: [8, 0, 1],
+                    E: [13, 0, 1],
+                    F: [20, 0, 1],
+                    G: [32, 1, 2],
+                    H: [50, 2, 3],
+                    J: [80, 3, 4],
+                    K: [125, 5, 6],
+                    L: [200, 7, 8],
+                    M: [315, 10, 11],
+                    N: [500, 14, 15],
+                    P: [800, 21, 22],
+                    Q: [1250, 21, 22]
+                },
+                "1.0": {
+                    A: [2, 0, 1],
+                    B: [3, 0, 1],
+                    C: [5, 0, 1],
+                    D: [8, 0, 1],
+                    E: [13, 0, 1],
+                    F: [20, 0, 1],
+                    G: [32, 1, 2],
+                    H: [50, 2, 3],
+                    J: [80, 3, 4],
+                    K: [125, 5, 6],
+                    L: [200, 7, 8],
+                    M: [315, 10, 11],
+                    N: [500, 14, 15],
+                    P: [800, 21, 22],
+                    Q: [1250, 21, 22]
+                },
+                "1.5": {
+                    A: [2, 0, 1],
+                    B: [3, 0, 1],
+                    C: [5, 0, 1],
+                    D: [8, 0, 1],
+                    E: [13, 1, 2],
+                    F: [20, 1, 2],
+                    G: [32, 2, 3],
+                    H: [50, 3, 4],
+                    J: [80, 5, 6],
+                    K: [125, 7, 8],
+                    L: [200, 10, 11],
+                    M: [315, 14, 15],
+                    N: [500, 21, 22],
+                    P: [800, 21, 22],
+                    Q: [1250, 21, 22]
+                },
+                "2.5": {
+                    A: [2, 0, 1],
+                    B: [3, 0, 1],
+                    C: [5, 0, 1],
+                    D: [8, 1, 2],
+                    E: [13, 1, 2],
+                    F: [20, 2, 3],
+                    G: [32, 3, 4],
+                    H: [50, 5, 6],
+                    J: [80, 7, 8],
+                    K: [125, 10, 11],
+                    L: [200, 14, 15],
+                    M: [315, 21, 22],
+                    N: [500, 21, 22],
+                    P: [800, 21, 22],
+                    Q: [1250, 21, 22]
+                },
+                "4.0": {
+                    A: [2, 0, 1],
+                    B: [3, 0, 1],
+                    C: [5, 0, 1],
+                    D: [8, 1, 2],
+                    E: [13, 2, 3],
+                    F: [20, 3, 4],
+                    G: [32, 5, 6],
+                    H: [50, 7, 8],
+                    J: [80, 10, 11],
+                    K: [125, 14, 15],
+                    L: [200, 21, 22],
+                    M: [315, 21, 22],
+                    N: [500, 21, 22],
+                    P: [800, 21, 22],
+                    Q: [1250, 21, 22]
+                },
+                "6.5": {
+                    A: [2, 0, 1],
+                    B: [3, 1, 2],
+                    C: [5, 1, 2],
+                    D: [8, 2, 3],
+                    E: [13, 3, 4],
+                    F: [20, 3, 4],
+                    G: [32, 5, 6],
+                    H: [50, 7, 8],
+                    J: [80, 10, 11],
+                    K: [125, 14, 15],
+                    L: [200, 21, 22],
+                    M: [315, 21, 22],
+                    N: [500, 21, 22],
+                    P: [800, 21, 22],
+                    Q: [1250, 21, 22]
+                }
+            };
+
+            const CODE_TABLE = [
+                [2, 8, 'A'],
+                [9, 15, 'B'],
+                [16, 25, 'C'],
+                [26, 50, 'D'],
+                [51, 90, 'E'],
+                [91, 150, 'F'],
+                [151, 280, 'G'],
+                [281, 500, 'H'],
+                [501, 1200, 'J'],
+                [1201, 3200, 'K'],
+                [3201, 10000, 'L'],
+                [10001, 35000, 'M'],
+                [35001, 150000, 'N'],
+                [150001, 500000, 'P'],
+                [500001, Infinity, 'Q']
+            ];
+            const CODE_ORDER = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q'];
+
+            // ===== State =====
+            let allDataRows = [];
+            let currentHeaders = [];
+            let currentSampleRows = null;
+            let currentSeed = null;
+            let lastValidLotSize = 1000; // для захисту від некоректного вводу
+
+            // ===== Helpers =====
+            function getCodeLetter(N) {
+                for (const [low, high, code] of CODE_TABLE) {
+                    if (N >= low && N <= high) return code;
+                }
+                return 'Q';
+            }
+
+            function findPlan(table, aql, code) {
+                const aqlTable = table[aql];
+                if (!aqlTable) return null;
+                let idx = CODE_ORDER.indexOf(code);
+                for (let i = idx; i < CODE_ORDER.length; i++) {
+                    const c = CODE_ORDER[i];
+                    if (aqlTable[c]) return { code: c, plan: aqlTable[c] };
+                }
+                for (let i = idx - 1; i >= 0; i--) {
+                    const c = CODE_ORDER[i];
+                    if (aqlTable[c]) return { code: c, plan: aqlTable[c] };
+                }
+                return null;
+            }
+
+            function getSamplingPlan(N, AQL) {
+                const code = getCodeLetter(N);
+                const found = findPlan(SINGLE_NORMAL, AQL, code);
+                if (!found) return null;
+                const [n, ac, re] = found.plan;
+                return { code: found.code, n, ac, re, aql: AQL };
+            }
+
+            function showToast(msg) {
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.textContent = msg;
+                document.body.appendChild(t);
+                setTimeout(() => t.remove(), 2800);
+            }
+
+            function setExportEnabled(enabled) {
+                [
+                    DOM.downloadCsvRandom,
+                    DOM.downloadCsvSorted,
+                    DOM.downloadExcelRandom,
+                    DOM.downloadExcelSorted
+                ].forEach(b => b.disabled = !enabled);
+            }
+
+            function showButtonFeedback(btn) {
+                if (!btn) return;
+                const orig = btn.textContent;
+                btn.textContent = '✅ Збережено!';
+                btn.classList.add('saving');
+                setTimeout(() => {
+                    btn.textContent = orig;
+                    btn.classList.remove('saving');
+                }, 2000);
+            }
+
+            function escapeHtml(str) {
+                if (str === undefined || str === null) return '';
+                return String(str).replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+            }
+
+            function renderSampleTable(rows, headers) {
+                DOM.sampleBody.innerHTML = '';
+                if (!rows || !rows.length) return;
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const tr = document.createElement('tr');
+                headers.forEach(h => {
+                    const th = document.createElement('th');
+                    th.textContent = h;
+                    tr.appendChild(th);
+                });
+                thead.appendChild(tr);
+                table.appendChild(thead);
+                const tbody = document.createElement('tbody');
+                rows.forEach(row => {
+                    const r = document.createElement('tr');
+                    row.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = escapeHtml(cell);
+                        r.appendChild(td);
+                    });
+                    tbody.appendChild(r);
+                });
+                table.appendChild(tbody);
+                DOM.sampleBody.appendChild(table);
+            }
+
+            // ===== Seeded RNG (Park-Miller) =====
+            function seededRandom(seed) {
+                let s = seed % 2147483647;
+                if (s <= 0) s += 2147483646;
+                return () => {
+                    s = (s * 16807) % 2147483647;
+                    return (s - 1) / 2147483646;
+                };
+            }
+
+            function fisherYates(arr, seed) {
+                const rng = seededRandom(seed);
+                const a = [...arr];
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(rng() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function getSampleIndices(total, sampleSize, seed) {
+                const indices = Array.from({ length: total }, (_, i) => i);
+                return fisherYates(indices, seed).slice(0, sampleSize);
+            }
+
+            // ===== Filename generator =====
+            function getFileName(suffix) {
+                const id = DOM.lotIdentifier.value.trim() || 'Lot';
+                const cleanId = id.replace(/[^a-zA-Z0-9а-яА-ЯіІїЇєЄ_\- ]/g, '_').substring(0, 50);
+                const N = DOM.lotSize.value || 'N';
+                const n = currentSampleRows ? currentSampleRows.length : 'n';
+                const seed = currentSeed !== null ? currentSeed : 'seed';
+                return `${cleanId}_N${N}_n${n}_seed${seed}${suffix}`;
+            }
+
+            // ===== Export =====
+            function csvEscape(cell) {
+                const s = String(cell);
+                if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r')) {
+                    return `"${s.replace(/"/g, '""')}"`;
+                }
+                return s;
+            }
+
+            function exportToCSV(sorted, btn) {
+                if (!currentSampleRows || !currentSampleRows.length || !currentHeaders.length) {
+                    showToast('❌ Спершу сформуйте вибірку');
+                    return;
+                }
+                const rows = sorted ?
+                    [...currentSampleRows].sort((a, b) => a.origIndex - b.origIndex).map(i => i.row) :
+                    currentSampleRows.map(i => i.row);
+                if (!rows.length) {
+                    showToast('❌ Вибірка порожня');
+                    return;
+                }
+                const csv = currentHeaders.join(',') + '\n' +
+                    rows.map(r => r.map(csvEscape).join(',')).join('\n');
+                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = getFileName(sorted ? '_sorted.csv' : '_random.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                if (btn) showButtonFeedback(btn);
+                showToast('📥 CSV збережено');
+            }
+
+            function exportToExcel(sorted, btn) {
+                if (!currentSampleRows || !currentSampleRows.length || !currentHeaders.length) {
+                    showToast('❌ Спершу сформуйте вибірку');
+                    return;
+                }
+                if (typeof XLSX === 'undefined') {
+                    showToast('❌ Бібліотека Excel недоступна');
+                    return;
+                }
+                try {
+                    const rows = sorted ?
+                        [...currentSampleRows].sort((a, b) => a.origIndex - b.origIndex).map(i => i.row) :
+                        currentSampleRows.map(i => i.row);
+                    if (!rows.length) {
+                        showToast('❌ Вибірка порожня');
+                        return;
+                    }
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet([currentHeaders, ...rows]);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Вибірка');
+                    XLSX.writeFile(wb, getFileName(sorted ? '_sorted.xlsx' : '_random.xlsx'));
+                    if (btn) showButtonFeedback(btn);
+                    showToast('📥 Excel збережено');
+                } catch (err) {
+                    console.error(err);
+                    alert('❌ Помилка створення Excel. Спробуйте CSV.');
+                }
+            }
+
+            // ===== MAIN: generate sample =====
+            function generateSample() {
+                // Валідація обсягу партії
+                const N = parseInt(DOM.lotSize.value, 10);
+                if (isNaN(N) || N < 2) {
+                    alert('Обсяг партії має бути цілим числом ≥ 2');
+                    DOM.lotSize.value = lastValidLotSize;
+                    return;
+                }
+                lastValidLotSize = N;
+
+                const aqlMajor = DOM.aqlMajor.value;
+                const plan = getSamplingPlan(N, aqlMajor);
+                if (!plan) {
+                    alert('Не вдалося визначити план вибірки для заданого AQL.');
+                    return;
+                }
+
+                // Валідація та генерація seed
+                let seedInput = DOM.seed.value.trim();
+                if (seedInput !== '') {
+                    if (!/^\d+$/.test(seedInput)) {
+                        alert('Seed має бути цілим додатним числом або порожнім (буде згенеровано випадковий).');
+                        return;
+                    }
+                    currentSeed = parseInt(seedInput, 10);
+                } else {
+                    currentSeed = Math.floor(Math.random() * 1000000000);
+                }
+                // Оновлюємо поле вводу, щоб воно завжди відображало використаний seed
+                DOM.seed.value = currentSeed;
+
+                // Визначення джерела даних
+                let dataRows = [];
+                let headers = [];
+                if (allDataRows.length && currentHeaders.length) {
+                    dataRows = allDataRows;
+                    headers = currentHeaders;
+                } else {
+                    // Синтетичні дані
+                    headers = ['ID', 'Serial', 'Modification'];
+                    for (let i = 1; i <= N; i++) {
+                        dataRows.push([
+                            String(i),
+                            `SN${String(i).padStart(6, '0')}`,
+                            `Версія ${(i % 3) + 1}`
+                        ]);
+                    }
+                }
+                currentHeaders = headers;
+
+                if (dataRows.length < plan.n) {
+                    alert(`Недостатньо даних. Потрібно мінімум ${plan.n}, є ${dataRows.length}`);
+                    return;
+                }
+
+                const indices = getSampleIndices(dataRows.length, plan.n, currentSeed);
+                currentSampleRows = indices.map(i => ({ row: dataRows[i], origIndex: i }));
+
+                // Відображення плану
+                DOM.planDetails.innerHTML = `
+                    <div class="plan-detail-grid">
+                        <div class="item"><span class="label">Код</span><span class="value">${plan.code}</span></div>
+                        <div class="item"><span class="label">Обсяг вибірки (n)</span><span class="value">${plan.n}</span></div>
+                        <div class="item"><span class="label">Ac / Re (Major)</span><span class="value">${plan.ac} / ${plan.re}</span></div>
+                        <div class="item"><span class="label">AQL Major</span><span class="value">${plan.aql}%</span></div>
+                        <div class="item"><span class="label">Seed</span><span class="value">${currentSeed}</span></div>
+                        <div class="item"><span class="label">Рівень контролю</span><span class="value">II · Normal</span></div>
+                    </div>
+                `;
+
+                renderSampleTable(currentSampleRows.map(i => i.row), currentHeaders);
+                DOM.sampleSizeBadge.textContent = `n = ${plan.n}`;
+                DOM.sampleTitle.textContent = `Вибірка (n = ${plan.n})  ${allDataRows.length ? '● файл' : '● синтет.'}`;
+                DOM.planCard.classList.remove('hidden');
+                setExportEnabled(true);
+            }
+
+            // ===== FILE HANDLING =====
+            DOM.fileInput.addEventListener('change', function(e) {
+                if (typeof XLSX === 'undefined') {
+                    alert('Бібліотека для читання файлів недоступна. Перевірте підключення до інтернету.');
+                    this.value = '';
+                    return;
+                }
+                const file = e.target.files[0];
+                if (!file) return;
+                DOM.fileNameDisplay.textContent = file.name;
+
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const data = new Uint8Array(evt.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
+                        if (json.length < 2) {
+                            alert('Файл порожній або містить замало даних');
+                            return;
+                        }
+                        currentHeaders = json[0].map(h => String(h).trim());
+                        const rawRows = json.slice(1);
+                        allDataRows = rawRows.filter(row => row.some(cell => cell !== ''));
+                        const totalRows = rawRows.length;
+                        const validRows = allDataRows.length;
+                        DOM.lotSize.value = validRows;
+                        lastValidLotSize = validRows;
+
+                        let noteText = `✅ Автоматично визначено: <strong>${validRows}</strong> одиниць.`;
+                        if (totalRows !== validRows) {
+                            noteText += ` (Відфільтровано ${totalRows - validRows} порожніх рядків.)`;
+                        }
+                        DOM.autoNote.innerHTML = noteText;
+
+                        currentSampleRows = null;
+                        DOM.sampleBody.innerHTML = '';
+                        setExportEnabled(false);
+                        DOM.planCard.classList.add('hidden');
+                        showToast(`📂 Завантажено ${validRows} рядків`);
+                    } catch (err) {
+                        alert('Помилка при читанні файлу.');
+                        console.error(err);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            // ===== Захист від некоректного вводу обсягу партії =====
+            DOM.lotSize.addEventListener('input', function() {
+                const val = parseInt(this.value, 10);
+                if (!isNaN(val) && val >= 2) {
+                    lastValidLotSize = val;
+                }
+            });
+            DOM.lotSize.addEventListener('change', function() {
+                const val = parseInt(this.value, 10);
+                if (isNaN(val) || val < 2) {
+                    this.value = lastValidLotSize;
+                } else {
+                    lastValidLotSize = val;
+                    // Якщо завантажені файлові дані та новий розмір відрізняється – попередження
+                    if (allDataRows.length > 0 && val !== allDataRows.length) {
+                        if (confirm(`Ви змінили обсяг партії на ${val}. Це очистить завантажені дані. Продовжити?`)) {
+                            allDataRows = [];
+                            currentHeaders = [];
+                            currentSampleRows = null;
+                            DOM.sampleBody.innerHTML = '';
+                            DOM.fileNameDisplay.textContent = 'Файл не вибрано';
+                            DOM.autoNote.innerHTML = 'Після вибору файлу обсяг партії визначиться автоматично';
+                            DOM.fileInput.value = '';
+                            setExportEnabled(false);
+                            DOM.planCard.classList.add('hidden');
+                        } else {
+                            this.value = allDataRows.length;
+                            lastValidLotSize = allDataRows.length;
+                        }
+                    }
+                }
+            });
+
+            // ===== EVENT BINDINGS =====
+            DOM.generateBtn.addEventListener('click', generateSample);
+
+            DOM.copySeedBtn.addEventListener('click', async function() {
+                try {
+                    await navigator.clipboard.writeText(DOM.seed.value);
+                    showToast('📋 Seed скопійовано');
+                } catch (err) {
+                    showToast('❌ Не вдалося скопіювати seed. Спробуйте вручну.');
+                }
+            });
+
+            DOM.downloadCsvRandom.addEventListener('click', function() { exportToCSV(false, this); });
+            DOM.downloadCsvSorted.addEventListener('click', function() { exportToCSV(true, this); });
+            DOM.downloadExcelRandom.addEventListener('click', function() { exportToExcel(false, this); });
+            DOM.downloadExcelSorted.addEventListener('click', function() { exportToExcel(true, this); });
+
+            DOM.clearBtn.addEventListener('click', function() {
+                DOM.lotIdentifier.value = '25/3/F/41/';
+                DOM.lotSize.value = '1000';
+                lastValidLotSize = 1000;
+                DOM.aqlCritical.value = '0.65';
+                DOM.aqlMajor.value = '1.0';
+                DOM.aqlMinor.value = '2.5';
+                const now = new Date();
+                DOM.seed.value =
+                    `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}${now.getFullYear()}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+                DOM.fileInput.value = '';
+                DOM.fileNameDisplay.textContent = 'Файл не вибрано';
+                DOM.autoNote.innerHTML = 'Після вибору файлу обсяг партії визначиться автоматично';
+                DOM.planCard.classList.add('hidden');
+                currentSampleRows = null;
+                currentHeaders = [];
+                allDataRows = [];
+                DOM.sampleBody.innerHTML = '';
+                setExportEnabled(false);
+                showToast('🗑 Форму очищено');
+            });
+
+            // ===== Встановлення seed за замовчуванням =====
+            (function setDefaultSeed() {
+                const now = new Date();
+                DOM.seed.value =
+                    `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}${now.getFullYear()}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+            })();
+
+        })();
+    </script>
+</body>
+</html>
