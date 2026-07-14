@@ -3,295 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-  <title>Формування вибірки (ISO 2859-1)</title>
+  <title>Формування вибірки (ISO 2859-1) зі стратифікацією за Modification or Execution</title>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f7fb;
-      margin: 0;
-      padding: 16px;
-      color: #1e293b;
-    }
-    .container {
-      max-width: 820px;
-      margin: 0 auto;
-    }
-    .card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 24px 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-      transition: box-shadow 0.2s;
-    }
-    .card:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09);
-    }
-    h1 {
-      font-size: 2rem;
-      margin: 0 0 4px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .sub {
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-bottom: 22px;
-      border-left: 4px solid #3b82f6;
-      padding-left: 14px;
-      line-height: 1.5;
-    }
-    label {
-      font-weight: 600;
-      display: block;
-      margin: 20px 0 8px;
-      font-size: 0.95rem;
-      letter-spacing: -0.01em;
-    }
-    input,
-    select,
-    button,
-    .fake-file {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 1.02rem;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      background: #ffffff;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.13);
-    }
-    button {
-      background: #3b82f6;
-      color: #ffffff;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      padding: 15px;
-      margin-top: 10px;
-      border-radius: 16px;
-      font-size: 1.02rem;
-      transition: background 0.2s, transform 0.1s;
-    }
-    button:active {
-      transform: scale(0.97);
-    }
-    button:hover:not(:disabled) {
-      background: #2563eb;
-    }
-    button.secondary {
-      background: #f1f5f9;
-      color: #1e293b;
-    }
-    button.secondary:hover:not(:disabled) {
-      background: #e2e8f0;
-    }
-    button:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-    .sample-window {
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-top: 16px;
-      background: #fafcff;
-    }
-    .sample-header {
-      background: #f1f5f9;
-      padding: 12px 18px;
-      font-weight: 600;
-      color: #334155;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .sample-header .badge {
-      background: #3b82f6;
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 2px 12px;
-      border-radius: 30px;
-      font-weight: 500;
-    }
-    .sample-body {
-      max-height: 440px;
-      overflow-y: auto;
-      padding: 8px 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-    th,
-    td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    th {
-      background: #f8fafc;
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      white-space: nowrap;
-    }
-    tr:hover td {
-      background: #f1f5f9;
-    }
-    .aql-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
-    }
-    .aql-group label {
-      margin: 4px 0 4px;
-      font-size: 0.85rem;
-    }
-    .flex-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .flex-row button {
-      flex: 1;
-      min-width: 140px;
-    }
-    .hidden {
-      display: none !important;
-    }
-    .note {
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-top: 6px;
-      line-height: 1.5;
-    }
-    .seed-wrapper {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .seed-wrapper input {
-      flex: 1;
-    }
-    .seed-wrapper button {
-      flex: 0 0 auto;
-      margin-top: 0;
-      width: auto;
-      padding: 14px 22px;
-    }
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e293b;
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      z-index: 999;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      animation: fadeInOut 2.8s ease forwards;
-      pointer-events: none;
-    }
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateX(-50%) translateY(24px); }
-      14% { opacity: 1; transform: translateX(-50%) translateY(0); }
-      72% { opacity: 1; }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-12px); }
-    }
-    .saving {
-      background: #10b981 !important;
-    }
-    .file-zone {
-      position: relative;
-      border-radius: 16px;
-      border: 2px dashed #d1d5db;
-      padding: 4px;
-      transition: border-color 0.2s, background 0.2s;
-      background: #fafcff;
-    }
-    .file-zone:hover {
-      border-color: #3b82f6;
-      background: #f8faff;
-    }
-    .file-zone .fake-file {
-      border: none;
-      background: transparent;
-      padding: 16px 18px;
-      color: #64748b;
-      cursor: pointer;
-    }
-    .file-zone input[type="file"] {
-      position: absolute;
-      opacity: 0;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-    .plan-detail-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      background: #f8fafc;
-      border-radius: 16px;
-      padding: 16px 20px;
-      margin-bottom: 8px;
-    }
-    .plan-detail-grid .item {
-      display: flex;
-      flex-direction: column;
-    }
-    .plan-detail-grid .label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #64748b;
-    }
-    .plan-detail-grid .value {
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: #0f172a;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f5f7fb; margin: 0; padding: 16px; color: #1e293b; }
+    .container { max-width: 820px; margin: 0 auto; }
+    .card { background: #ffffff; border-radius: 24px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: box-shadow 0.2s; }
+    .card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.09); }
+    h1 { font-size: 2rem; margin: 0 0 4px; font-weight: 700; letter-spacing: -0.02em; }
+    .sub { color: #64748b; font-size: 0.95rem; margin-bottom: 22px; border-left: 4px solid #3b82f6; padding-left: 14px; line-height: 1.5; }
+    label { font-weight: 600; display: block; margin: 20px 0 8px; font-size: 0.95rem; letter-spacing: -0.01em; }
+    input, select, button, .fake-file { width: 100%; padding: 14px 16px; font-size: 1.02rem; border-radius: 16px; border: 1px solid #e2e8f0; background: #ffffff; transition: border-color 0.2s, box-shadow 0.2s; }
+    input:focus, select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.13); }
+    button { background: #3b82f6; color: #ffffff; font-weight: 600; border: none; cursor: pointer; padding: 15px; margin-top: 10px; border-radius: 16px; font-size: 1.02rem; transition: background 0.2s, transform 0.1s; }
+    button:active { transform: scale(0.97); }
+    button:hover:not(:disabled) { background: #2563eb; }
+    button.secondary { background: #f1f5f9; color: #1e293b; }
+    button.secondary:hover:not(:disabled) { background: #e2e8f0; }
+    button:disabled { opacity: 0.5; pointer-events: none; }
+    .sample-window { border: 2px solid #e2e8f0; border-radius: 20px; overflow: hidden; margin-top: 16px; background: #fafcff; }
+    .sample-header { background: #f1f5f9; padding: 12px 18px; font-weight: 600; color: #334155; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .sample-header .badge { background: #3b82f6; color: #fff; font-size: 0.75rem; padding: 2px 12px; border-radius: 30px; font-weight: 500; }
+    .sample-body { max-height: 440px; overflow-y: auto; padding: 8px 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f8fafc; font-weight: 600; position: sticky; top: 0; z-index: 10; white-space: nowrap; }
+    tr:hover td { background: #f1f5f9; }
+    .aql-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .aql-group label { margin: 4px 0 4px; font-size: 0.85rem; }
+    .flex-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .flex-row button { flex: 1; min-width: 140px; }
+    .hidden { display: none !important; }
+    .note { font-size: 0.85rem; color: #64748b; margin-top: 6px; line-height: 1.5; }
+    .seed-wrapper { display: flex; gap: 8px; align-items: center; }
+    .seed-wrapper input { flex: 1; }
+    .seed-wrapper button { flex: 0 0 auto; margin-top: 0; width: auto; padding: 14px 22px; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 12px 28px; border-radius: 40px; font-weight: 600; z-index: 999; box-shadow: 0 8px 32px rgba(0,0,0,0.25); animation: fadeInOut 2.8s ease forwards; pointer-events: none; }
+    @keyframes fadeInOut { 0% { opacity: 0; transform: translateX(-50%) translateY(24px); } 14% { opacity: 1; transform: translateX(-50%) translateY(0); } 72% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-12px); } }
+    .saving { background: #10b981 !important; }
+    .file-zone { position: relative; border-radius: 16px; border: 2px dashed #d1d5db; padding: 4px; transition: border-color 0.2s, background 0.2s; background: #fafcff; }
+    .file-zone:hover { border-color: #3b82f6; background: #f8faff; }
+    .file-zone .fake-file { border: none; background: transparent; padding: 16px 18px; color: #64748b; cursor: pointer; }
+    .file-zone input[type="file"] { position: absolute; opacity: 0; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer; }
+    .plan-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; background: #f8fafc; border-radius: 16px; padding: 16px 20px; margin-bottom: 8px; }
+    .plan-detail-grid .item { display: flex; flex-direction: column; }
+    .plan-detail-grid .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: #64748b; }
+    .plan-detail-grid .value { font-weight: 700; font-size: 1.15rem; color: #0f172a; }
+    .strata-box { background: #f8fafc; border-radius: 16px; padding: 16px; margin-top: 8px; border: 1px solid #e2e8f0; }
+    .strata-summary { margin-top: 16px; background: #f0fdf4; border-radius: 16px; padding: 16px; border: 1px solid #bbf7d0; }
+    .strata-summary table { font-size: 0.85rem; }
     @media (max-width: 640px) {
-      .container { padding: 0 4px; }
-      .card { padding: 16px 18px; border-radius: 20px; }
-      h1 { font-size: 1.6rem; }
-      .aql-group { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-      .flex-row { flex-direction: column; }
-      .flex-row button { min-width: unset; }
-      .seed-wrapper { flex-wrap: wrap; }
-      .seed-wrapper button { width: 100%; justify-content: center; }
-      .plan-detail-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 16px; }
-      th, td { padding: 8px 10px; font-size: 0.82rem; }
+      .container { padding: 0 4px; } .card { padding: 16px 18px; border-radius: 20px; } h1 { font-size: 1.6rem; }
+      .aql-group { grid-template-columns: 1fr 1fr 1fr; gap: 8px; } .flex-row { flex-direction: column; } .flex-row button { min-width: unset; }
+      .seed-wrapper { flex-wrap: wrap; } .seed-wrapper button { width: 100%; justify-content: center; }
+      .plan-detail-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 16px; } th, td { padding: 8px 10px; font-size: 0.82rem; }
     }
-    @media (max-width: 420px) {
-      .aql-group { grid-template-columns: 1fr; }
-      .plan-detail-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 420px) { .aql-group { grid-template-columns: 1fr; } .plan-detail-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <div class="container">
-  <!-- Main card -->
   <div class="card">
     <h1>📊 Формування вибірки</h1>
     <div class="sub">ISO 2859-1 · Одноступінчатий · Рівень II</div>
@@ -312,30 +84,9 @@
 
     <label>🎯 AQL за типом дефекту <span style="font-weight:400;color:#64748b;">(план враховує всі рівні)</span></label>
     <div class="aql-group">
-      <div>
-        <label style="margin:4px 0 2px;">Critical</label>
-        <select id="aqlCritical">
-          <option value="0">0%</option>
-          <option value="0.65" selected>0.65%</option>
-        </select>
-      </div>
-      <div>
-        <label style="margin:4px 0 2px;">Major</label>
-        <select id="aqlMajor">
-          <option value="0.65">0.65%</option>
-          <option value="1.0" selected>1.0%</option>
-          <option value="1.5">1.5%</option>
-          <option value="2.5">2.5%</option>
-        </select>
-      </div>
-      <div>
-        <label style="margin:4px 0 2px;">Minor</label>
-        <select id="aqlMinor">
-          <option value="1.5">1.5%</option>
-          <option value="2.5" selected>2.5%</option>
-          <option value="4.0">4.0%</option>
-        </select>
-      </div>
+      <div><label style="margin:4px 0 2px;">Critical</label><select id="aqlCritical"><option value="0">0%</option><option value="0.65" selected>0.65%</option></select></div>
+      <div><label style="margin:4px 0 2px;">Major</label><select id="aqlMajor"><option value="0.65">0.65%</option><option value="1.0" selected>1.0%</option><option value="1.5">1.5%</option><option value="2.5">2.5%</option></select></div>
+      <div><label style="margin:4px 0 2px;">Minor</label><select id="aqlMinor"><option value="1.5">1.5%</option><option value="2.5" selected>2.5%</option><option value="4.0">4.0%</option></select></div>
     </div>
 
     <label>📂 Файл партії <span style="font-weight:400;color:#64748b;">(CSV, XLSX, XLS)</span></label>
@@ -344,6 +95,21 @@
       <input type="file" id="csvFile" accept=".csv,.xlsx,.xls" />
     </div>
     <div class="note" id="autoNote">Після вибору файлу обсяг партії визначиться автоматично</div>
+
+    <!-- Стратифікація за Modification or Execution -->
+    <div id="strataBlock" class="strata-box hidden">
+      <label style="margin:0 0 8px;">🎯 Стратифікація (колонка «Modification or Execution»)</label>
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <label style="margin:0; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="useStratification" /> Увімкнути
+        </label>
+        <select id="strataMethod" style="flex:1; min-width: 160px;" disabled>
+          <option value="proportional" selected>Пропорційно розміру групи</option>
+          <option value="equal">Рівномірно між групами</option>
+        </select>
+      </div>
+      <div class="note" id="strataNote">Пошук колонки «Modification or Execution»...</div>
+    </div>
 
     <label>🌱 Seed <span style="font-weight:400;color:#64748b;">(для відтворюваності)</span></label>
     <div class="seed-wrapper">
@@ -357,18 +123,20 @@
     </div>
   </div>
 
-  <!-- Plan card -->
   <div id="planCard" class="card hidden">
     <h3 style="margin:0 0 8px;">📋 План контролю</h3>
     <div id="planDetails"></div>
 
     <h3 style="margin:28px 0 12px;">📋 Вибрана вибірка</h3>
     <div class="sample-window">
-      <div class="sample-header" id="sampleHeader">
-        <span id="sampleTitle">Попередній перегляд</span>
-        <span class="badge" id="sampleSizeBadge">n = 0</span>
-      </div>
+      <div class="sample-header" id="sampleHeader"><span id="sampleTitle">Попередній перегляд</span><span class="badge" id="sampleSizeBadge">n = 0</span></div>
       <div class="sample-body" id="sampleBody"></div>
+    </div>
+
+    <!-- Зведена таблиця розподілу за стратами -->
+    <div id="strataSummaryBlock" class="strata-summary hidden">
+      <h4 style="margin:0 0 8px;">📌 Розподіл вибірки за групами (стратами)</h4>
+      <div id="strataSummaryContent"></div>
     </div>
 
     <div style="margin-top:22px;">
@@ -387,322 +155,286 @@
 <script>
   (function() {
     'use strict';
-
-    // Перевірка бібліотеки XLSX
     if (typeof XLSX === 'undefined') {
-      document.getElementById('autoNote').innerHTML = '❌ Помилка: бібліотека для роботи з Excel не завантажилась. Перевірте підключення до інтернету.';
+      document.getElementById('autoNote').innerHTML = '❌ Помилка: бібліотека для роботи з Excel не завантажилась.';
       document.getElementById('csvFile').disabled = true;
       console.error('SheetJS library not loaded.');
     }
 
-    // DOM елементи
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
     const DOM = {
-      lotSize: $('lotSize'),
-      lotIdentifier: $('lotIdentifier'),
-      aqlCritical: $('aqlCritical'),
-      aqlMajor: $('aqlMajor'),
-      aqlMinor: $('aqlMinor'),
-      seed: $('seed'),
-      planDetails: $('planDetails'),
-      sampleBody: $('sampleBody'),
-      sampleTitle: $('sampleTitle'),
-      sampleSizeBadge: $('sampleSizeBadge'),
-      fileNameDisplay: $('fileNameDisplay'),
-      autoNote: $('autoNote'),
-      downloadCsvRandom: $('downloadCsvRandomBtn'),
-      downloadCsvSorted: $('downloadCsvSortedBtn'),
-      downloadExcelRandom: $('downloadExcelRandomBtn'),
-      downloadExcelSorted: $('downloadExcelSortedBtn'),
-      planCard: $('planCard'),
-      generateBtn: $('generateBtn'),
-      clearBtn: $('clearFormBtn'),
-      copySeedBtn: $('copySeedBtn'),
-      fileInput: $('csvFile'),
-      inspectionMode: $('inspectionMode'),
+      lotSize: $('lotSize'), lotIdentifier: $('lotIdentifier'), aqlCritical: $('aqlCritical'), aqlMajor: $('aqlMajor'), aqlMinor: $('aqlMinor'),
+      seed: $('seed'), planDetails: $('planDetails'), sampleBody: $('sampleBody'), sampleTitle: $('sampleTitle'), sampleSizeBadge: $('sampleSizeBadge'),
+      fileNameDisplay: $('fileNameDisplay'), autoNote: $('autoNote'),
+      downloadCsvRandom: $('downloadCsvRandomBtn'), downloadCsvSorted: $('downloadCsvSortedBtn'),
+      downloadExcelRandom: $('downloadExcelRandomBtn'), downloadExcelSorted: $('downloadExcelSortedBtn'),
+      planCard: $('planCard'), generateBtn: $('generateBtn'), clearBtn: $('clearFormBtn'), copySeedBtn: $('copySeedBtn'),
+      fileInput: $('csvFile'), inspectionMode: $('inspectionMode'),
+      strataBlock: $('strataBlock'), useStratification: $('useStratification'), strataMethod: $('strataMethod'), strataNote: $('strataNote'),
+      strataSummaryBlock: $('strataSummaryBlock'), strataSummaryContent: $('strataSummaryContent')
     };
 
-    // ========== ТАБЛИЦІ ПЛАНІВ (Single, Level II) ==========
     const SINGLE_NORMAL = {
-      "0":      {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,0,1],K:[125,0,1],L:[200,0,1],M:[315,0,1],N:[500,0,1],P:[800,0,1],Q:[1250,0,1]},
-      "0.65":   {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
-      "1.0":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
-      "1.5":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "2.5":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "4.0":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "6.5":    {A:[2,0,1],B:[3,1,2],C:[5,1,2],D:[8,2,3],E:[13,3,4],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
+      "0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,0,1],K:[125,0,1],L:[200,0,1],M:[315,0,1],N:[500,0,1],P:[800,0,1],Q:[1250,0,1]},
+      "0.65": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
+      "1.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
+      "1.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "2.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "4.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "6.5": {A:[2,0,1],B:[3,1,2],C:[5,1,2],D:[8,2,3],E:[13,3,4],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
     };
     const SINGLE_TIGHTENED = {
-      "0":      {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,0,1],K:[125,0,1],L:[200,0,1],M:[315,0,1],N:[500,0,1],P:[800,0,1],Q:[1250,0,1]},
-      "0.65":   {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
-      "1.0":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
-      "1.5":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,1,2],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
-      "2.5":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "4.0":    {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
-      "6.5":    {A:[2,0,1],B:[3,0,1],C:[5,1,2],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
+      "0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,0,1],J:[80,0,1],K:[125,0,1],L:[200,0,1],M:[315,0,1],N:[500,0,1],P:[800,0,1],Q:[1250,0,1]},
+      "0.65": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,0,1],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
+      "1.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,0,1],G:[32,1,2],H:[50,1,2],J:[80,2,3],K:[125,3,4],L:[200,5,6],M:[315,7,8],N:[500,10,11],P:[800,14,15],Q:[1250,14,15]},
+      "1.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,0,1],F:[20,1,2],G:[32,1,2],H:[50,2,3],J:[80,3,4],K:[125,5,6],L:[200,7,8],M:[315,10,11],N:[500,14,15],P:[800,21,22],Q:[1250,21,22]},
+      "2.5": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,0,1],E:[13,1,2],F:[20,1,2],G:[32,2,3],H:[50,3,4],J:[80,5,6],K:[125,7,8],L:[200,10,11],M:[315,14,15],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "4.0": {A:[2,0,1],B:[3,0,1],C:[5,0,1],D:[8,1,2],E:[13,1,2],F:[20,2,3],G:[32,3,4],H:[50,5,6],J:[80,7,8],K:[125,10,11],L:[200,14,15],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]},
+      "6.5": {A:[2,0,1],B:[3,0,1],C:[5,1,2],D:[8,1,2],E:[13,2,3],F:[20,3,4],G:[32,5,6],H:[50,7,8],J:[80,10,11],K:[125,14,15],L:[200,21,22],M:[315,21,22],N:[500,21,22],P:[800,21,22],Q:[1250,21,22]}
     };
     const SINGLE_REDUCED = {
-      "0":      {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,0,1],L:[80,0,1],M:[125,0,1],N:[200,0,1],P:[315,0,1],Q:[500,0,1]},
-      "0.65":   {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,1,2],L:[80,2,3],M:[125,3,4],N:[200,5,6],P:[315,7,8],Q:[500,10,11]},
-      "1.0":    {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,1,2],J:[32,1,2],K:[50,2,3],L:[80,3,4],M:[125,5,6],N:[200,7,8],P:[315,10,11],Q:[500,14,15]},
-      "1.5":    {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,1,2],H:[20,1,2],J:[32,2,3],K:[50,3,4],L:[80,5,6],M:[125,7,8],N:[200,10,11],P:[315,14,15],Q:[500,21,22]},
-      "2.5":    {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,1,2],G:[13,1,2],H:[20,2,3],J:[32,3,4],K:[50,5,6],L:[80,7,8],M:[125,10,11],N:[200,14,15],P:[315,21,22],Q:[500,21,22]},
-      "4.0":    {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,1,2],F:[8,1,2],G:[13,2,3],H:[20,3,4],J:[32,5,6],K:[50,7,8],L:[80,10,11],M:[125,14,15],N:[200,21,22],P:[315,21,22],Q:[500,21,22]},
-      "6.5":    {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,1,2],E:[8,1,2],F:[8,2,3],G:[13,3,4],H:[20,5,6],J:[32,7,8],K:[50,10,11],L:[80,14,15],M:[125,21,22],N:[200,21,22],P:[315,21,22],Q:[500,21,22]}
+      "0": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,0,1],L:[80,0,1],M:[125,0,1],N:[200,0,1],P:[315,0,1],Q:[500,0,1]},
+      "0.65": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,0,1],J:[32,0,1],K:[50,1,2],L:[80,2,3],M:[125,3,4],N:[200,5,6],P:[315,7,8],Q:[500,10,11]},
+      "1.0": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,0,1],H:[20,1,2],J:[32,1,2],K:[50,2,3],L:[80,3,4],M:[125,5,6],N:[200,7,8],P:[315,10,11],Q:[500,14,15]},
+      "1.5": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,0,1],G:[13,1,2],H:[20,1,2],J:[32,2,3],K:[50,3,4],L:[80,5,6],M:[125,7,8],N:[200,10,11],P:[315,14,15],Q:[500,21,22]},
+      "2.5": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,0,1],F:[8,1,2],G:[13,1,2],H:[20,2,3],J:[32,3,4],K:[50,5,6],L:[80,7,8],M:[125,10,11],N:[200,14,15],P:[315,21,22],Q:[500,21,22]},
+      "4.0": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,0,1],E:[8,1,2],F:[8,1,2],G:[13,2,3],H:[20,3,4],J:[32,5,6],K:[50,7,8],L:[80,10,11],M:[125,14,15],N:[200,21,22],P:[315,21,22],Q:[500,21,22]},
+      "6.5": {A:[2,0,1],B:[2,0,1],C:[3,0,1],D:[5,1,2],E:[8,1,2],F:[8,2,3],G:[13,3,4],H:[20,5,6],J:[32,7,8],K:[50,10,11],L:[80,14,15],M:[125,21,22],N:[200,21,22],P:[315,21,22],Q:[500,21,22]}
     };
 
-    const CODE_TABLE = [
-      [2,8,'A'], [9,15,'B'], [16,25,'C'], [26,50,'D'], [51,90,'E'],
-      [91,150,'F'], [151,280,'G'], [281,500,'H'], [501,1200,'J'],
-      [1201,3200,'K'], [3201,10000,'L'], [10001,35000,'M'],
-      [35001,150000,'N'], [150001,500000,'P'], [500001,Infinity,'Q']
-    ];
+    const CODE_TABLE = [[2,8,'A'],[9,15,'B'],[16,25,'C'],[26,50,'D'],[51,90,'E'],[91,150,'F'],[151,280,'G'],[281,500,'H'],[501,1200,'J'],[1201,3200,'K'],[3201,10000,'L'],[10001,35000,'M'],[35001,150000,'N'],[150001,500000,'P'],[500001,Infinity,'Q']];
     const CODE_ORDER = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q'];
 
-    // Стан
     let allDataRows = [];
     let currentHeaders = [];
     let currentSampleRows = null;
     let currentSeed = null;
     let lastValidLotSize = 1000;
+    let strataColumnIndex = -1;
 
-    // Допоміжні функції
-    function getCodeLetter(N) {
-      for (const [low, high, code] of CODE_TABLE) {
-        if (N >= low && N <= high) return code;
-      }
-      return 'Q';
-    }
-
+    function getCodeLetter(N) { for (const [l,h,c] of CODE_TABLE) if (N>=l && N<=h) return c; return 'Q'; }
     function findPlan(table, aql, code) {
-      const aqlTable = table[aql];
-      if (!aqlTable) return null;
+      const t = table[aql]; if (!t) return null;
       let idx = CODE_ORDER.indexOf(code);
-      for (let i = idx; i < CODE_ORDER.length; i++) {
-        const c = CODE_ORDER[i];
-        if (aqlTable[c]) return { code: c, plan: aqlTable[c] };
-      }
-      for (let i = idx - 1; i >= 0; i--) {
-        const c = CODE_ORDER[i];
-        if (aqlTable[c]) return { code: c, plan: aqlTable[c] };
-      }
+      for (let i=idx; i<CODE_ORDER.length; i++) { const c = CODE_ORDER[i]; if (t[c]) return {code:c, plan:t[c]}; }
+      for (let i=idx-1; i>=0; i--) { const c = CODE_ORDER[i]; if (t[c]) return {code:c, plan:t[c]}; }
       return null;
     }
-
     function getSamplingPlan(N, AQL, mode) {
       const code = getCodeLetter(N);
-      let table;
-      if (mode === 'tightened') table = SINGLE_TIGHTENED;
-      else if (mode === 'reduced') table = SINGLE_REDUCED;
-      else table = SINGLE_NORMAL;
+      let table = mode==='tightened' ? SINGLE_TIGHTENED : (mode==='reduced' ? SINGLE_REDUCED : SINGLE_NORMAL);
       const found = findPlan(table, AQL, code);
       if (!found) return null;
-      const [n, ac, re] = found.plan;
-      return { code: found.code, n, ac, re, aql: AQL };
+      const [n,ac,re] = found.plan;
+      return {code: found.code, n, ac, re, aql: AQL};
     }
 
-    function showToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'toast';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(() => t.remove(), 2800);
-    }
-
-    function setExportEnabled(enabled) {
-      [DOM.downloadCsvRandom, DOM.downloadCsvSorted, DOM.downloadExcelRandom, DOM.downloadExcelSorted]
-        .forEach(b => b.disabled = !enabled);
-    }
-
-    function showButtonFeedback(btn) {
-      if (!btn) return;
-      const orig = btn.textContent;
-      btn.textContent = '✅ Збережено!';
-      btn.classList.add('saving');
-      setTimeout(() => {
-        btn.textContent = orig;
-        btn.classList.remove('saving');
-      }, 2000);
-    }
-
-    function escapeHtml(str) {
-      if (str === undefined || str === null) return '';
-      return String(str).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
-    }
-
+    function showToast(msg) { const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2800); }
+    function setExportEnabled(en) { [DOM.downloadCsvRandom,DOM.downloadCsvSorted,DOM.downloadExcelRandom,DOM.downloadExcelSorted].forEach(b=>b.disabled=!en); }
+    function showButtonFeedback(btn) { if(!btn) return; const o=btn.textContent; btn.textContent='✅ Збережено!'; btn.classList.add('saving'); setTimeout(()=>{btn.textContent=o; btn.classList.remove('saving');},2000); }
+    function escapeHtml(s) { if(s===undefined||s===null) return ''; return String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
     function renderSampleTable(rows, headers) {
       DOM.sampleBody.innerHTML = '';
-      if (!rows || !rows.length) return;
+      if (!rows||!rows.length) return;
       const table = document.createElement('table');
       const thead = document.createElement('thead');
       const tr = document.createElement('tr');
-      headers.forEach(h => {
-        const th = document.createElement('th');
-        th.textContent = h;
-        tr.appendChild(th);
-      });
-      thead.appendChild(tr);
-      table.appendChild(thead);
+      headers.forEach(h=>{ const th=document.createElement('th'); th.textContent=h; tr.appendChild(th); });
+      thead.appendChild(tr); table.appendChild(thead);
       const tbody = document.createElement('tbody');
-      rows.forEach(row => {
-        const r = document.createElement('tr');
-        row.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = escapeHtml(cell);
-          r.appendChild(td);
-        });
-        tbody.appendChild(r);
-      });
+      rows.forEach(row=>{ const r=document.createElement('tr'); row.forEach(cell=>{ const td=document.createElement('td'); td.textContent=escapeHtml(cell); r.appendChild(td); }); tbody.appendChild(r); });
       table.appendChild(tbody);
       DOM.sampleBody.appendChild(table);
     }
 
-    // RNG
-    function seededRandom(seed) {
-      let s = seed % 2147483647;
-      if (s <= 0) s += 2147483646;
-      return () => {
-        s = (s * 16807) % 2147483647;
-        return (s - 1) / 2147483646;
-      };
-    }
+    function seededRandom(seed) { let s=seed%2147483647; if(s<=0) s+=2147483646; return ()=>{ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
+    function fisherYates(arr, seed) { const rng=seededRandom(seed); const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+    function getSampleIndices(total, sampleSize, seed) { const indices=Array.from({length:total},(_,i)=>i); return fisherYates(indices,seed).slice(0,sampleSize); }
 
-    function fisherYates(arr, seed) {
-      const rng = seededRandom(seed);
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+    function stratifiedSampleIndices(dataRows, strataColIndex, totalSampleSize, method, seed) {
+      const groups = new Map();
+      dataRows.forEach((row,idx)=>{ const key=row[strataColIndex]??''; if(!groups.has(key)) groups.set(key,[]); groups.get(key).push(idx); });
+      const strataNames = Array.from(groups.keys());
+      const strataSizes = strataNames.map(n=>groups.get(n).length);
+      const totalSize = dataRows.length;
+      let sampleSizes = [];
+      if (method === 'equal') {
+        const base = Math.floor(totalSampleSize / strataNames.length);
+        const rem = totalSampleSize - base * strataNames.length;
+        sampleSizes = strataNames.map((_,i)=> i<rem ? base+1 : base);
+      } else {
+        let allocated = 0;
+        sampleSizes = strataNames.map((_,i)=>{
+          const prop = strataSizes[i]/totalSize;
+          let size = Math.round(prop*totalSampleSize);
+          if (size > strataSizes[i]) size = strataSizes[i];
+          if (size < 1 && strataSizes[i] > 0) size = 1;
+          allocated += size;
+          return size;
+        });
+        let diff = totalSampleSize - allocated;
+        if (diff !== 0) {
+          const sorted = strataNames.map((_,i)=>i).sort((a,b)=> strataSizes[b]-strataSizes[a]);
+          for (let i=0; i<Math.abs(diff); i++) {
+            const idx = sorted[i % sorted.length];
+            if (diff>0 && sampleSizes[idx] < strataSizes[idx]) sampleSizes[idx]++;
+            else if (diff<0 && sampleSizes[idx] > 1) sampleSizes[idx]--;
+          }
+        }
       }
-      return a;
+      const selected = [];
+      const rng = seededRandom(seed);
+      strataNames.forEach((name,i)=>{
+        const indices = groups.get(name);
+        const size = Math.min(sampleSizes[i], indices.length);
+        const shuffled = fisherYates(indices, Math.floor(rng()*1000000));
+        selected.push(...shuffled.slice(0,size));
+      });
+      if (selected.length < totalSampleSize) {
+        const remaining = totalSampleSize - selected.length;
+        const usedSet = new Set(selected);
+        const all = Array.from({length:totalSize},(_,i)=>i).filter(i=>!usedSet.has(i));
+        const extra = fisherYates(all, Math.floor(rng()*1000000)).slice(0,remaining);
+        selected.push(...extra);
+      }
+      return selected.slice(0, totalSampleSize);
     }
 
-    function getSampleIndices(total, sampleSize, seed) {
-      const indices = Array.from({length: total}, (_, i) => i);
-      return fisherYates(indices, seed).slice(0, sampleSize);
+    // Обчислення статистики розподілу для зведеної таблиці
+    function getStrataSummary(dataRows, sampleIndices, strataColIndex) {
+      const groups = new Map();
+      dataRows.forEach((row, idx) => {
+        const key = row[strataColIndex] ?? '';
+        if (!groups.has(key)) groups.set(key, { total: 0, sampled: 0 });
+        groups.get(key).total++;
+      });
+      sampleIndices.forEach(i => {
+        const key = dataRows[i][strataColIndex] ?? '';
+        if (groups.has(key)) groups.get(key).sampled++;
+      });
+      return Array.from(groups.entries()).map(([name, counts]) => ({
+        name: name || '(порожньо)',
+        total: counts.total,
+        sampled: counts.sampled
+      }));
     }
 
     function getFileName(suffix) {
-      const id = DOM.lotIdentifier.value.trim() || 'Lot';
-      const cleanId = id.replace(/[^a-zA-Z0-9а-яА-ЯіІїЇєЄ_\- ]/g, '_').substring(0, 50);
-      const N = DOM.lotSize.value || 'N';
-      const n = currentSampleRows ? currentSampleRows.length : 'n';
-      const seed = currentSeed !== null ? currentSeed : 'seed';
+      const id = DOM.lotIdentifier.value.trim()||'Lot';
+      const cleanId = id.replace(/[^a-zA-Z0-9а-яА-ЯіІїЇєЄ_\- ]/g,'_').substring(0,50);
+      const N = DOM.lotSize.value||'N';
+      const n = currentSampleRows?currentSampleRows.length:'n';
+      const seed = currentSeed!==null?currentSeed:'seed';
       return `${cleanId}_N${N}_n${n}_seed${seed}${suffix}`;
     }
-
-    function csvEscape(cell) {
-      const s = String(cell);
-      if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r')) {
-        return `"${s.replace(/"/g, '""')}"`;
-      }
-      return s;
-    }
-
+    function csvEscape(cell) { const s=String(cell); if(s.includes(',')||s.includes('"')||s.includes('\n')||s.includes('\r')) return `"${s.replace(/"/g,'""')}"`; return s; }
     function exportToCSV(sorted, btn) {
-      if (!currentSampleRows || !currentSampleRows.length || !currentHeaders.length) {
-        showToast('❌ Спершу сформуйте вибірку');
-        return;
-      }
-      const rows = sorted
-        ? [...currentSampleRows].sort((a,b) => a.origIndex - b.origIndex).map(i => i.row)
-        : currentSampleRows.map(i => i.row);
-      const csv = currentHeaders.join(',') + '\n' + rows.map(r => r.map(csvEscape).join(',')).join('\n');
-      const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8;'});
+      if (!currentSampleRows||!currentSampleRows.length||!currentHeaders.length) { showToast('❌ Спершу сформуйте вибірку'); return; }
+      const rows = sorted ? [...currentSampleRows].sort((a,b)=>a.origIndex-b.origIndex).map(i=>i.row) : currentSampleRows.map(i=>i.row);
+      const csv = currentHeaders.join(',') + '\n' + rows.map(r=>r.map(csvEscape).join(',')).join('\n');
+      const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = getFileName(sorted ? '_sorted.csv' : '_random.csv');
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      if (btn) showButtonFeedback(btn);
+      const a = document.createElement('a'); a.href=url; a.download=getFileName(sorted?'_sorted.csv':'_random.csv');
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      if(btn) showButtonFeedback(btn);
       showToast('📥 CSV збережено');
     }
-
     function exportToExcel(sorted, btn) {
-      if (!currentSampleRows || !currentSampleRows.length || !currentHeaders.length) {
-        showToast('❌ Спершу сформуйте вибірку');
-        return;
-      }
-      if (typeof XLSX === 'undefined') {
-        showToast('❌ Бібліотека Excel недоступна');
-        return;
-      }
+      if (!currentSampleRows||!currentSampleRows.length||!currentHeaders.length) { showToast('❌ Спершу сформуйте вибірку'); return; }
+      if (typeof XLSX==='undefined') { showToast('❌ Бібліотека Excel недоступна'); return; }
       try {
-        const rows = sorted
-          ? [...currentSampleRows].sort((a,b) => a.origIndex - b.origIndex).map(i => i.row)
-          : currentSampleRows.map(i => i.row);
+        const rows = sorted ? [...currentSampleRows].sort((a,b)=>a.origIndex-b.origIndex).map(i=>i.row) : currentSampleRows.map(i=>i.row);
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.aoa_to_sheet([currentHeaders, ...rows]);
         XLSX.utils.book_append_sheet(wb, ws, 'Вибірка');
-        XLSX.writeFile(wb, getFileName(sorted ? '_sorted.xlsx' : '_random.xlsx'));
-        if (btn) showButtonFeedback(btn);
+        XLSX.writeFile(wb, getFileName(sorted?'_sorted.xlsx':'_random.xlsx'));
+        if(btn) showButtonFeedback(btn);
         showToast('📥 Excel збережено');
-      } catch (err) {
-        console.error(err);
-        alert('❌ Помилка створення Excel. Спробуйте CSV.');
+      } catch(e) { console.error(e); alert('❌ Помилка створення Excel. Спробуйте CSV.'); }
+    }
+
+    function findStrataColumn(headers) {
+      const lower = headers.map(h => h.toLowerCase().trim());
+      return lower.indexOf('modification or execution');
+    }
+
+    function updateStrataBlock() {
+      if (currentHeaders.length > 0) {
+        strataColumnIndex = findStrataColumn(currentHeaders);
+        if (strataColumnIndex >= 0) {
+          DOM.strataBlock.classList.remove('hidden');
+          DOM.strataNote.textContent = `✅ Колонку «${currentHeaders[strataColumnIndex]}» знайдено. Стратифікація можлива.`;
+          DOM.useStratification.disabled = false;
+          DOM.strataMethod.disabled = !DOM.useStratification.checked;
+        } else {
+          DOM.strataBlock.classList.remove('hidden');
+          DOM.strataNote.textContent = '❌ Колонку «Modification or Execution» не знайдено. Стратифікація неможлива.';
+          DOM.useStratification.disabled = true;
+          DOM.useStratification.checked = false;
+          DOM.strataMethod.disabled = true;
+        }
+      } else {
+        DOM.strataBlock.classList.add('hidden');
+        strataColumnIndex = -1;
       }
     }
 
-    // Головна функція генерації вибірки
-    function generateSample() {
-      const N = parseInt(DOM.lotSize.value, 10);
-      if (isNaN(N) || N < 2) {
-        alert('Обсяг партії має бути цілим числом ≥ 2');
-        DOM.lotSize.value = lastValidLotSize;
+    // Рендерить зведену таблицю розподілу
+    function renderStrataSummary(dataRows, sampleIndices, strataColIdx) {
+      const summary = getStrataSummary(dataRows, sampleIndices, strataColIdx);
+      if (!summary.length) {
+        DOM.strataSummaryBlock.classList.add('hidden');
         return;
       }
-      lastValidLotSize = N;
+      let html = '<table><thead><tr><th>Група (страта)</th><th>У партії</th><th>У вибірці</th></tr></thead><tbody>';
+      summary.forEach(s => {
+        html += `<tr><td>${escapeHtml(s.name)}</td><td>${s.total}</td><td><strong>${s.sampled}</strong></td></tr>`;
+      });
+      html += '</tbody></table>';
+      DOM.strataSummaryContent.innerHTML = html;
+      DOM.strataSummaryBlock.classList.remove('hidden');
+    }
 
+    function generateSample() {
+      const N = parseInt(DOM.lotSize.value,10);
+      if (isNaN(N)||N<2) { alert('Обсяг партії має бути цілим числом ≥ 2'); DOM.lotSize.value=lastValidLotSize; return; }
+      lastValidLotSize = N;
       const mode = DOM.inspectionMode.value;
       const plans = {
         critical: getSamplingPlan(N, DOM.aqlCritical.value, mode),
         major: getSamplingPlan(N, DOM.aqlMajor.value, mode),
         minor: getSamplingPlan(N, DOM.aqlMinor.value, mode)
       };
-
-      for (const [type, plan] of Object.entries(plans)) {
-        if (!plan) {
-          alert(`Не вдалося визначити план для рівня ${type} з AQL у режимі ${mode}.`);
-          return;
-        }
-      }
-
-      const n = plans.major.n; // обсяг вибірки однаковий для всіх рівнів
-
+      for (const [type, plan] of Object.entries(plans)) { if (!plan) { alert(`Не вдалося визначити план для рівня ${type} з AQL у режимі ${mode}.`); return; } }
+      const n = plans.major.n;
       let seedInput = DOM.seed.value.trim();
-      if (seedInput !== '') {
-        if (!/^\d+$/.test(seedInput)) {
-          alert('Seed має бути цілим додатним числом або порожнім (буде згенеровано випадковий).');
-          return;
-        }
-        currentSeed = parseInt(seedInput, 10);
-      } else {
-        currentSeed = Math.floor(Math.random() * 1000000000);
-      }
+      if (seedInput!=='') { if(!/^\d+$/.test(seedInput)) { alert('Seed має бути цілим додатним числом або порожнім.'); return; } currentSeed=parseInt(seedInput,10); }
+      else { currentSeed = Math.floor(Math.random()*1000000000); }
       DOM.seed.value = currentSeed;
 
-      let dataRows = [];
-      let headers = [];
+      let dataRows = [], headers = [];
       if (allDataRows.length && currentHeaders.length) {
-        dataRows = allDataRows;
-        headers = currentHeaders;
+        dataRows = allDataRows; headers = currentHeaders;
       } else {
-        headers = ['ID', 'Serial', 'Modification'];
-        for (let i = 1; i <= N; i++) {
-          dataRows.push([String(i), `SN${String(i).padStart(6, '0')}`, `Версія ${(i % 3) + 1}`]);
-        }
+        headers = ['ID', 'Serial', 'Modification or Execution'];
+        for (let i=1; i<=N; i++) dataRows.push([String(i), `SN${String(i).padStart(6,'0')}`, `Версія ${(i%3)+1}`]);
       }
       currentHeaders = headers;
+      updateStrataBlock();
 
-      if (dataRows.length < n) {
-        alert(`Недостатньо даних. Потрібно мінімум ${n}, є ${dataRows.length}`);
-        return;
+      if (dataRows.length < n) { alert(`Недостатньо даних. Потрібно мінімум ${n}, є ${dataRows.length}`); return; }
+
+      let indices;
+      const useStrata = DOM.useStratification.checked && strataColumnIndex >= 0;
+      if (useStrata) {
+        indices = stratifiedSampleIndices(dataRows, strataColumnIndex, n, DOM.strataMethod.value, currentSeed);
+        // Показати зведену таблицю
+        renderStrataSummary(dataRows, indices, strataColumnIndex);
+      } else {
+        DOM.strataSummaryBlock.classList.add('hidden');
+        indices = getSampleIndices(dataRows.length, n, currentSeed);
       }
 
-      const indices = getSampleIndices(dataRows.length, n, currentSeed);
       currentSampleRows = indices.map(i => ({ row: dataRows[i], origIndex: i }));
 
       const modeNames = { normal: 'Нормальний', tightened: 'Посилений', reduced: 'Послаблений' };
@@ -720,133 +452,87 @@
           <div class="item"><span class="label">Ac / Re Minor</span><span class="value">${plans.minor.ac} / ${plans.minor.re}</span></div>
         </div>
       `;
-
-      renderSampleTable(currentSampleRows.map(i => i.row), currentHeaders);
+      renderSampleTable(currentSampleRows.map(i=>i.row), currentHeaders);
       DOM.sampleSizeBadge.textContent = `n = ${n}`;
       DOM.sampleTitle.textContent = `Вибірка (n = ${n})  ${allDataRows.length ? '● файл' : '● синтет.'}`;
       DOM.planCard.classList.remove('hidden');
       setExportEnabled(true);
     }
 
-    // Завантаження файлу
     DOM.fileInput.addEventListener('change', function(e) {
-      if (typeof XLSX === 'undefined') {
-        alert('Бібліотека для читання файлів недоступна.');
-        this.value = '';
-        return;
-      }
-      const file = e.target.files[0];
-      if (!file) return;
+      if (typeof XLSX==='undefined') { alert('Бібліотека для читання файлів недоступна.'); this.value=''; return; }
+      const file = e.target.files[0]; if(!file) return;
       DOM.fileNameDisplay.textContent = file.name;
-
       const reader = new FileReader();
       reader.onload = function(evt) {
         try {
           const data = new Uint8Array(evt.target.result);
-          const workbook = XLSX.read(data, {type: 'array'});
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:false});
-          if (json.length < 2) {
-            alert('Файл порожній або містить замало даних');
-            return;
-          }
-          currentHeaders = json[0].map(h => String(h).trim());
+          const wb = XLSX.read(data,{type:'array'});
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(sheet,{header:1,defval:'',raw:false});
+          if (json.length<2) { alert('Файл порожній або містить замало даних'); return; }
+          currentHeaders = json[0].map(h=>String(h).trim());
           const rawRows = json.slice(1);
-          allDataRows = rawRows.filter(row => row.some(cell => cell !== ''));
+          allDataRows = rawRows.filter(row=>row.some(cell=>cell!==''));
           const validRows = allDataRows.length;
           DOM.lotSize.value = validRows;
           lastValidLotSize = validRows;
-
-          let noteText = `✅ Автоматично визначено: <strong>${validRows}</strong> одиниць.`;
-          if (rawRows.length !== validRows) {
-            noteText += ` (Відфільтровано ${rawRows.length - validRows} порожніх рядків.)`;
-          }
-          DOM.autoNote.innerHTML = noteText;
-
-          currentSampleRows = null;
-          DOM.sampleBody.innerHTML = '';
-          setExportEnabled(false);
-          DOM.planCard.classList.add('hidden');
+          let note = `✅ Автоматично визначено: <strong>${validRows}</strong> одиниць.`;
+          if (rawRows.length !== validRows) note += ` (Відфільтровано ${rawRows.length-validRows} порожніх рядків.)`;
+          DOM.autoNote.innerHTML = note;
+          updateStrataBlock();
+          currentSampleRows = null; DOM.sampleBody.innerHTML = '';
+          DOM.strataSummaryBlock.classList.add('hidden');
+          setExportEnabled(false); DOM.planCard.classList.add('hidden');
           showToast(`📂 Завантажено ${validRows} рядків`);
-        } catch (err) {
-          alert('Помилка при читанні файлу.');
-          console.error(err);
-        }
+        } catch(err) { alert('Помилка при читанні файлу.'); console.error(err); }
       };
       reader.readAsArrayBuffer(file);
     });
 
-    // Захист від некоректного вводу N
-    DOM.lotSize.addEventListener('input', function() {
-      const val = parseInt(this.value, 10);
-      if (!isNaN(val) && val >= 2) lastValidLotSize = val;
-    });
+    DOM.lotSize.addEventListener('input', function() { const v=parseInt(this.value,10); if(!isNaN(v)&&v>=2) lastValidLotSize=v; });
     DOM.lotSize.addEventListener('change', function() {
-      const val = parseInt(this.value, 10);
-      if (isNaN(val) || val < 2) {
-        this.value = lastValidLotSize;
-      } else {
-        lastValidLotSize = val;
-        if (allDataRows.length > 0 && val !== allDataRows.length) {
-          if (confirm(`Ви змінили обсяг партії на ${val}. Це очистить завантажені дані. Продовжити?`)) {
-            allDataRows = [];
-            currentHeaders = [];
-            currentSampleRows = null;
-            DOM.sampleBody.innerHTML = '';
-            DOM.fileNameDisplay.textContent = 'Файл не вибрано';
-            DOM.autoNote.innerHTML = 'Після вибору файлу обсяг партії визначиться автоматично';
-            DOM.fileInput.value = '';
-            setExportEnabled(false);
-            DOM.planCard.classList.add('hidden');
-          } else {
-            this.value = allDataRows.length;
-            lastValidLotSize = allDataRows.length;
-          }
+      const v=parseInt(this.value,10);
+      if(isNaN(v)||v<2) { this.value=lastValidLotSize; }
+      else {
+        lastValidLotSize=v;
+        if(allDataRows.length>0 && v!==allDataRows.length) {
+          if(confirm(`Ви змінили обсяг партії на ${v}. Це очистить завантажені дані. Продовжити?`)) {
+            allDataRows=[]; currentHeaders=[]; currentSampleRows=null; DOM.sampleBody.innerHTML='';
+            DOM.fileNameDisplay.textContent='Файл не вибрано'; DOM.autoNote.innerHTML='Після вибору файлу обсяг партії визначиться автоматично';
+            DOM.fileInput.value=''; updateStrataBlock(); DOM.strataSummaryBlock.classList.add('hidden');
+            setExportEnabled(false); DOM.planCard.classList.add('hidden');
+          } else { this.value=allDataRows.length; lastValidLotSize=allDataRows.length; }
         }
       }
     });
 
-    // Події
+    DOM.useStratification.addEventListener('change', function() { DOM.strataMethod.disabled = !this.checked; });
     DOM.generateBtn.addEventListener('click', generateSample);
-    DOM.copySeedBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(DOM.seed.value);
-        showToast('📋 Seed скопійовано');
-      } catch (err) {
-        showToast('❌ Не вдалося скопіювати seed. Спробуйте вручну.');
-      }
-    });
-    DOM.downloadCsvRandom.addEventListener('click', function() { exportToCSV(false, this); });
-    DOM.downloadCsvSorted.addEventListener('click', function() { exportToCSV(true, this); });
-    DOM.downloadExcelRandom.addEventListener('click', function() { exportToExcel(false, this); });
-    DOM.downloadExcelSorted.addEventListener('click', function() { exportToExcel(true, this); });
+    DOM.copySeedBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(DOM.seed.value); showToast('📋 Seed скопійовано'); } catch(e){ showToast('❌ Не вдалося скопіювати seed.'); } });
+    DOM.downloadCsvRandom.addEventListener('click', function(){ exportToCSV(false,this); });
+    DOM.downloadCsvSorted.addEventListener('click', function(){ exportToCSV(true,this); });
+    DOM.downloadExcelRandom.addEventListener('click', function(){ exportToExcel(false,this); });
+    DOM.downloadExcelSorted.addEventListener('click', function(){ exportToExcel(true,this); });
 
-    DOM.clearBtn.addEventListener('click', () => {
-      DOM.lotIdentifier.value = '25/3/F/41/';
-      DOM.lotSize.value = '1000';
-      lastValidLotSize = 1000;
-      DOM.aqlCritical.value = '0.65';
-      DOM.aqlMajor.value = '1.0';
-      DOM.aqlMinor.value = '2.5';
-      DOM.inspectionMode.value = 'normal';
-      const now = new Date();
-      DOM.seed.value = `${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-      DOM.fileInput.value = '';
-      DOM.fileNameDisplay.textContent = 'Файл не вибрано';
-      DOM.autoNote.innerHTML = 'Після вибору файлу обсяг партії визначиться автоматично';
-      DOM.planCard.classList.add('hidden');
-      currentSampleRows = null;
-      currentHeaders = [];
-      allDataRows = [];
-      DOM.sampleBody.innerHTML = '';
-      setExportEnabled(false);
-      showToast('🗑 Форму очищено');
+    DOM.clearBtn.addEventListener('click', ()=>{
+      DOM.lotIdentifier.value='25/3/F/41/'; DOM.lotSize.value='1000'; lastValidLotSize=1000;
+      DOM.aqlCritical.value='0.65'; DOM.aqlMajor.value='1.0'; DOM.aqlMinor.value='2.5';
+      DOM.inspectionMode.value='normal';
+      const now=new Date();
+      DOM.seed.value=`${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+      DOM.fileInput.value=''; DOM.fileNameDisplay.textContent='Файл не вибрано';
+      DOM.autoNote.innerHTML='Після вибору файлу обсяг партії визначиться автоматично';
+      DOM.planCard.classList.add('hidden'); currentSampleRows=null; currentHeaders=[]; allDataRows=[];
+      DOM.sampleBody.innerHTML=''; DOM.useStratification.checked=false; strataColumnIndex=-1;
+      DOM.strataBlock.classList.add('hidden'); DOM.strataMethod.disabled=true;
+      DOM.strataSummaryBlock.classList.add('hidden');
+      setExportEnabled(false); showToast('🗑 Форму очищено');
     });
 
-    // Початковий seed
-    (function setDefaultSeed() {
-      const now = new Date();
-      DOM.seed.value = `${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+    (function setDefaultSeed(){
+      const now=new Date();
+      DOM.seed.value=`${String(now.getDate()).padStart(2,'0')}${String(now.getMonth()+1).padStart(2,'0')}${now.getFullYear()}${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
     })();
   })();
 </script>
